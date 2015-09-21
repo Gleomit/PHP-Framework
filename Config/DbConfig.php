@@ -1,5 +1,7 @@
 <?php
 
+namespace DF\Config;
+
 final class DbConfig {
     const HOST = 'localhost';
     const USER = 'root';
