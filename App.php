@@ -4,7 +4,7 @@ namespace DF;
 
 class App {
 
-    private static $_instance = null;
+    private static $instance = null;
 
     public function run () {
 
@@ -14,10 +14,10 @@ class App {
      * @return \DF\App|null
      */
     public static function getInstance() {
-        if (self::$_instance == null) {
-            self::$_instance = new \DF\App();
+        if (self::$instance == null) {
+            self::$instance = new \DF\App();
         }
 
-        return self::$_instance;
+        return self::$instance;
     }
 }

@@ -2,7 +2,7 @@
 
 namespace DF\Config;
 
-final class DbConfig {
+final class DatabaseConfig {
     const HOST = 'localhost';
     const USER = 'root';
     const PASSWORD = '';

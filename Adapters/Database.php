@@ -2,19 +2,22 @@
 
 namespace DF\Adapters;
 
+use DF\Config\DatabaseConfig;
+
 abstract class Database {
-    protected $_host;
-    protected $_username;
-    protected $_password;
+    protected $host;
+    protected $username;
+    protected $password;
 
-    protected $_db_name;
-    protected $_connection;
+    protected $dbName;
+    protected static $connection;
 
-    public function __construct($host, $user, $pass, $db) {
-        $this->_host = $host;
-        $this->_username = $user;
-        $this->_password = $pass;
-        $this->_db_name = $db;
+    public function __construct($host = DatabaseConfig::HOST, $username = DatabaseConfig::USER,
+                                $password = DatabaseConfig::PASSWORD, $dbName = DatabaseConfig::DATABASE_NAME) {
+        $this->host = $host;
+        $this->username = $username;
+        $this->password = $password;
+        $this->dbName = $dbName;
 
         $this->connect();
         $this->query("SET NAMES utf8");
