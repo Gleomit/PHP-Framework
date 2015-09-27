@@ -1,6 +1,6 @@
 <?php
 
-namespace DF\Controllers;
+namespace DF\Library;
 
 abstract class BaseController {
 

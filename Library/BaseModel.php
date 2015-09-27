@@ -1,6 +1,6 @@
 <?php
 
-namespace DF\Models;
+namespace DF\Library;
 
 abstract class BaseModel {
 

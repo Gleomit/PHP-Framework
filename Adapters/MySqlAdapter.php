@@ -5,37 +5,34 @@ namespace DF\Adapters;
 class MySqlAdapter extends Database {
 
     private static $_instance;
-    private $_result;
+    private $_statement;
 
     protected function connect() {
-        $this->_conn = new \PDO('mysql:host=localhost;dbname=testdb;charset=utf8', 'username', 'password');
+        $this->_connection = new \PDO('mysql:host=$this->_host;dbname=$this->_db_name;charset=utf8', $this->_username, $this->_password);
     }
 
     public function query($query) {
-        return $this->_conn->query($query);
+        return $this->_connection->query($query);
     }
 
     public function prepare($query) {
-        $this->_result = $this->_conn->prepare($query);
+        $this->_statement = $this->_connection->prepare($query);
+
         return $this;
     }
 
-    public function execute() {
-        $this->_result->execute();
-        return $this;
-    }
+    public function execute($data = null) {
+        $this->_statement->execute($data);
 
-    public function executeWithData($data) {
-        $this->_result->execute($data);
         return $this;
     }
 
     public function beginTransaction() {
-        return $this->_conn->beginTransaction();
+        return $this->_connection->beginTransaction();
     }
 
     public function commit() {
-        return $this->_conn->commit();
+        return $this->_connection->commit();
     }
 
     public static function getInstance() {
