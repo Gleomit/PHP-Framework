@@ -15,7 +15,6 @@ class FrontController {
     private $app;
 
     private $router;
-    private $request;
 
     public function __construct(App $app, View $view) {
         $this->app = $app;
@@ -24,10 +23,9 @@ class FrontController {
 
     public function dispatch() {
         try {
-            $this->initRequest();
             $this->initController();
             $this->initAction();
-            $this->controller->render();
+            //$this->controller->render();
         } catch (\Exception $e) {
             echo $e->getMessage();
             return false;
@@ -48,28 +46,33 @@ class FrontController {
 
     private function initController() {
         if (!empty($this->getRouter()->getController())) {
-            $class = 'ANSR\Controllers\\' . $this->getRouter()->getController();
+
+            $class = 'DF\Controllers\\' . $this->getRouter()->getController();
+
             if (!class_exists($class)) {
-                throw new \ANSR\Library\Exception\LoadException('Controller not found');
+                throw new \Exception('Controller not found');
             }
-            $this->_controller = new $class($this->_app, $this->_view, $this->_request);
+
+            $this->controller = new $class($this->app, $this->view, $this->request);
         }
     }
     private function initAction() {
         if (!empty($this->getRouter()->getAction())) {
-            $this->_method = $this->getRouter()->getAction();
-            $this->callMethod();
+            $this->action = $this->getRouter()->getAction();
+            $this->invokeAction();
         }
     }
-    private function callMethod() {
+    private function invokeAction() {
         if (!method_exists($this->getController(), $this->action)) {
             throw new \Exception("Undefined method.");
         }
+
         $action = $this->action;
-        if (\ANSR\Library\Registry\Registry::get('WEB_SERVICE') === true) {
-            die(json_encode($this->mapMethodArguments($action)));
-        } else {
-            $this->mapMethodArguments($action);
-        }
+
+        $this->getController()->$action();
+    }
+
+    private function initRequest() {
+
     }
 }

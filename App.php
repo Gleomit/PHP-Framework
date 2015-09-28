@@ -2,13 +2,19 @@
 
 namespace DF;
 
+use DF\Library\FrontController;
+use DF\Library\View;
+use DF\Routing\Router;
+
 class App {
 
     private static $instance = null;
-    private static $WEB_SERVICE = false;
+    public static $WEB_SERVICE = false;
 
     public function run () {
-
+        $frontController = new FrontController($this, new View());
+        $frontController->setRouter(new Router());
+        $frontController->dispatch();
     }
 
     /**
@@ -20,9 +26,5 @@ class App {
         }
 
         return self::$instance;
-    }
-
-    private function loadRoutes() {
-
     }
 }
