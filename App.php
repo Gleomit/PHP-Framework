@@ -5,6 +5,7 @@ namespace DF;
 class App {
 
     private static $instance = null;
+    private static $WEB_SERVICE = false;
 
     public function run () {
 
@@ -19,5 +20,9 @@ class App {
         }
 
         return self::$instance;
+    }
+
+    private function loadRoutes() {
+
     }
 }
