@@ -8,13 +8,15 @@ class AbstractRouter
     /**
      * @var Route[]
      */
-    protected static $_routes = [];
+    protected static $routes = [];
+    protected static $areas = [];
+
     /**
      * @param Route $route
      * @return \DF\Routing\RouterAbstract static bound
      */
     public static function addRoute(Route $route) {
-        self::$_routes[] = $route;
+        self::$routes[] = $route;
 
         return new static;
     }
@@ -22,6 +24,6 @@ class AbstractRouter
      * @return Route[]
      */
     public static function getRoutes() {
-        return self::$_routes;
+        return self::$routes;
     }
 }

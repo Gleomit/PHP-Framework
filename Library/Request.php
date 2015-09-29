@@ -22,6 +22,23 @@ class Request
         $this->type = $type;
     }
 
+    public static function handle() {
+        $type = $_SERVER['REQUEST_METHOD'];
+        $params = [];
+
+        if(in_array($type, [self::TYPE_POST, self::TYPE_STANDARD, self::TYPE_PUT])) {
+            foreach($_POST as $key => $value) {
+                $params[$key] = $value;
+            }
+        }
+
+        return new Request($params, $type);
+    }
+
+    private static function setParam() {
+
+    }
+
     public function getParams() {
         return $this->params;
     }

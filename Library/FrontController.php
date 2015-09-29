@@ -3,6 +3,7 @@
 namespace DF\Library;
 
 use DF\App;
+use DF\Routing\Router;
 
 class FrontController {
     private $controller;
@@ -14,15 +15,22 @@ class FrontController {
     private $view;
     private $app;
 
+    /**
+     * @var /DF/Routing/Router
+     */
     private $router;
+    private $request;
 
     public function __construct(App $app, View $view) {
         $this->app = $app;
         $this->view = $view;
+        $this->view->setFrontController($this);
     }
 
     public function dispatch() {
         try {
+            $this->router->parseUrl();
+            $this->initRequest();
             $this->initController();
             $this->initAction();
             //$this->controller->render();
@@ -32,7 +40,7 @@ class FrontController {
         }
     }
 
-    public function setRouter($router) {
+    public function setRouter(Router $router) {
         $this->router = $router;
     }
 
@@ -73,6 +81,6 @@ class FrontController {
     }
 
     private function initRequest() {
-
+        $this->request = Request::handle();
     }
 }

@@ -1,8 +1,16 @@
-Options -MultiViews
+<IfModule mod_rewrite.c>
+    RewriteEngine on
 
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} -s [OR]
-RewriteCond %{REQUEST_FILENAME} -l [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^.*$ - [NC,L]
-RewriteRule !\.(js|ico|gif|jpg|png|css)$ index.php [NC,L]
+    #This will stop processing if it's images
+    RewriteRule \.(css|jpe?g|gif|png|js)$ - [L] 
+
+    #Redirect everything to apache
+    #If the requested filename isn’t a file….
+    RewriteCond %{REQUEST_FILENAME} !-f
+    #and it isn’t a folder…
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
+    #L = (last - stop processing rules)
+    #QSA = (append query string from requeste to substring URL)
+</IfModule>
