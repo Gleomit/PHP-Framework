@@ -2,10 +2,11 @@
 
 namespace DF\Config;
 
-final class DatabaseConfig {
-    const HOST = 'localhost';
-    const USER = 'root';
-    const PASSWORD = '';
-    const DATABASE_NAME = '';
-    const DEFAULT_DB_INSTANCE_NAME = 'app';
+abstract class DatabaseConfig {
+    const DB_HOST = 'localhost';
+    const DB_USER = 'root';
+    const DB_PASSWORD = '';
+    const DB_NAME = '';
+    const DB_DRIVER = 'mysql';
+    const DB_INSTANCE = 'app';
 }

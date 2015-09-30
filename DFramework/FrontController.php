@@ -2,6 +2,7 @@
 
 namespace DF;
 
+use DF\Core\View;
 use DF\Routing\Router;
 
 class FrontController {

@@ -2,8 +2,8 @@
 
 namespace DF\Controllers;
 
-use DF\Library\BaseController;
-use DF\Library\ViewHelpers\FormViewHelper;
+use DF\Controllers\BaseController;
+use DF\Helpers\ViewHelpers\FormViewHelper;
 
 class TestController extends BaseController
 {
