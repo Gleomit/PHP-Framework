@@ -60,6 +60,7 @@ class RouteScanner
                 preg_match_all("/@GET|@PUT|@DELETE|@POST/", $methodDoc, $methodType);
                 preg_match_all("/@Authorize/", $methodDoc, $methodAuthorize);
                 preg_match_all("/@Roles\(.*\)/", $methodDoc, $methodRoles);
+                preg_match_all("/@Anonymous\(.*\)/", $methodDoc, $methodAnonymouse);
 
                 $methodKey = $baseRoute . $method->getName();
 
@@ -83,6 +84,8 @@ class RouteScanner
 
                 if(count($methodAuthorize[0]) > 0) {
                     $methodArray['authorize'] = true;
+                } else if(count($methodAnonymouse[0]) > 0) {
+                    $methodArray['authorize'] = false;
                 }
 
                 if(count($methodRoles[0]) > 0) {
