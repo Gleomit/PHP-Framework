@@ -1,6 +1,6 @@
 <?php
 
-namespace DF\Library\ViewHelpers;
+namespace DF\Helpers\ViewHelpers;
 
 use DF\Library\ViewHelpers\Elements\Checkbox;
 use DF\Library\ViewHelpers\Elements\PasswordField;

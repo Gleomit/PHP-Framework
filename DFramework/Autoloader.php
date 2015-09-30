@@ -1,8 +1,8 @@
 <?php
 
-namespace DF\Library;
+namespace DF;
 
-class Autoloader {
+class AutoLoader {
     public function register () {
         spl_autoload_register(function($class) {
             $pathParams = explode("\\", $class);

@@ -2,7 +2,6 @@
 
 namespace DF\Routing;
 
-use DF\Config\AppConfig;
 
 class Router extends AbstractRouter
 {

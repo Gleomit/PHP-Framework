@@ -2,8 +2,8 @@
 
 namespace DF;
 
-use DF\Library\FrontController;
-use DF\Library\View;
+use DF\FrontController;
+use DF\Core\View;
 use DF\Routing\Router;
 
 class App {

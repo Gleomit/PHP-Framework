@@ -1,8 +1,7 @@
 <?php
 
-namespace DF\Library;
+namespace DF;
 
-use DF\App;
 use DF\Routing\Router;
 
 class FrontController {

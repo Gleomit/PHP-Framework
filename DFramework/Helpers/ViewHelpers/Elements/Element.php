@@ -1,8 +1,8 @@
 <?php
 
-namespace DF\Library\ViewHelpers\Elements;
+namespace DF\Helpers\ViewHelpers\Elements;
 
-use DF\Library\ViewHelpers\FormViewHelper;
+use DF\Helpers\ViewHelpers\FormViewHelper;
 
 abstract class Element
 {

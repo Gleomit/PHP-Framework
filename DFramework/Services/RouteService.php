@@ -1,6 +1,6 @@
 <?php
 
-namespace DF\Helpers;
+namespace DF\Services;
 
 class RouteService
 {

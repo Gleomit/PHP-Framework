@@ -1,6 +1,8 @@
 <?php
 
-namespace DF\Library;
+namespace DF\Core;
+
+use DF\FrontController;
 
 class View
 {

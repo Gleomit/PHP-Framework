@@ -1,6 +1,6 @@
 <?php
 
-namespace DF\Adapters;
+namespace DF\Core;
 
 class Statement
 {
