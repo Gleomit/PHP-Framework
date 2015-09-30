@@ -4,6 +4,7 @@ namespace DF;
 
 use DF\FrontController;
 use DF\Core\View;
+use DF\Helpers\RouteScanner;
 use DF\Helpers\Session;
 use DF\Routing\Router;
 
@@ -18,13 +19,17 @@ class App {
     private $frontController;
 
     public function run () {
+        error_reporting(E_ALL);
+
         Session::start();
 
         $this->registerDatabaseConfiguration();
 
+        RouteScanner::performScan();
+
         $this->frontController = new FrontController($this, new View());
         $this->frontController->setRouter(new Router());
-        $this->frontController->dispatch();
+        //$this->frontController->dispatch();
     }
 
     private function registerDatabaseConfiguration() {

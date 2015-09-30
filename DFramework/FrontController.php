@@ -30,7 +30,7 @@ class FrontController {
     public function dispatch() {
         try {
             $this->router->parseUrl();
-            $this->initRequest();
+            //$this->initRequest();
             $this->initController();
             $this->initAction();
             //$this->controller->render();

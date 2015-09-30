@@ -17,6 +17,11 @@ class Database
         $this->db = $pdoInstance;
     }
 
+    /**
+     * @param string $instanceName
+     * @return Database
+     * @throws \Exception
+     */
     public static function getInstance ($instanceName = 'default') {
         if(!isset(self::$_instances[$instanceName])) {
             throw new \Exception("Instance with this name does not exists.");

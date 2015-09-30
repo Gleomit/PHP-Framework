@@ -5,15 +5,8 @@ namespace DF\Routing;
 
 class Router extends AbstractRouter
 {
-    /**
-     * @var array
-     */
-
-    const REQUEST_URI_CONTROLLER = 2;
-    const REQUEST_URI_ACTION = 3;
-
-    private $controller = "HomeController";
-    private $action = "index";
+    private $controller;
+    private $action;
 
     public function __construct() {
 
