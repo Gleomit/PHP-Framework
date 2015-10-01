@@ -4,6 +4,7 @@ namespace DF;
 
 use DF\FrontController;
 use DF\Core\View;
+use DF\Helpers\Csrf;
 use DF\Helpers\RouteScanner;
 use DF\Helpers\Session;
 use DF\Routing\Router;
@@ -28,6 +29,9 @@ class App {
 
         $this->registerDatabaseConfiguration();
 
+        if(Csrf::getCSRFToken() == null) {
+            Csrf::setCSRFToken();
+        }
 //        RouteScanner::performScan();
 
         $this->frontController = new FrontController($this, new View());

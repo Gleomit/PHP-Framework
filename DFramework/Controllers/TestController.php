@@ -3,7 +3,6 @@
 namespace DF\Controllers;
 
 use DF\BindingModels\TestBindingModel;
-use DF\Controllers\BaseController;
 use DF\Helpers\ViewHelpers\FormViewHelper;
 use DF\Services\RouteService;
 
@@ -32,13 +31,14 @@ class TestController extends BaseController
     }
 
     /**
+     *
      * @Route("test")
      */
     public function testMe() {
         echo FormViewHelper::init()
             ->initTextField()
             ->setAttribute('value', 'test')
-            ->setName('r')
+            ->setName('property')
             ->create()
             ->setMethod("POST")
             ->setAction(RouteService::getUrl('test', ''))

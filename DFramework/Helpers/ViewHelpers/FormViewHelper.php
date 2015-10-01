@@ -2,6 +2,7 @@
 
 namespace DF\Helpers\ViewHelpers;
 
+use DF\Helpers\Csrf;
 use DF\Helpers\ViewHelpers\Elements\Checkbox;
 use DF\Helpers\ViewHelpers\Elements\PasswordField;
 use DF\Helpers\ViewHelpers\Elements\RadioButton;
@@ -22,7 +23,9 @@ class FormViewHelper
         self::$elements = [];
         self::$attributes = [];
 
-        self::setAttribute("class", "ajaxForm");
+        if($ajaxForm === true) {
+            self::setAttribute("class", "ajaxForm");
+        }
 
         return new self();
     }
@@ -57,6 +60,7 @@ class FormViewHelper
             }
         }
 
+        $result .= '<input type="hidden" name="csrf_token" value="' . Csrf::getCSRFToken() . '" />';
         $result .= "</form>";
 
         return $result;

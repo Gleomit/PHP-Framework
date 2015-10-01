@@ -10,6 +10,7 @@ class Request
      */
     private $params;
     private $type;
+    private static $needToChangeCsrf = false;
 
     const TYPE_GET = 'GET';
     const TYPE_PUT = 'PUT';
@@ -30,13 +31,20 @@ class Request
             foreach($_POST as $key => $value) {
                 $params[$key] = $value;
             }
+
+            self::$needToChangeCsrf = true;
         }
 
         return new Request($params, $type);
     }
 
     public function getType() {
+
         return $this->type;
+    }
+
+    public static function needToChangeCsrf() {
+        return self::$needToChangeCsrf;
     }
 
     public function getParams() {

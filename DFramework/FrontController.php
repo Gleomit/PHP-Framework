@@ -5,6 +5,7 @@ namespace DF;
 use DF\Config\AppConfig;
 use DF\Core\Request;
 use DF\Core\View;
+use DF\Helpers\Csrf;
 use DF\Helpers\Session;
 use DF\Routing\Router;
 use DF\Services\RoleService;
@@ -104,6 +105,14 @@ class FrontController {
             $requestParameters = $this->request->getParams();
             $requestParamsKeys = array_keys($requestParameters);
 
+            $csrfToken = false;
+
+            if(in_array('csrf_token', $requestParamsKeys)) {
+                $csrfToken = $requestParameters['csrf_token'];
+
+                unset($requestParameters['csrf_token']);
+            }
+
             foreach($this->getRouter()->routeInfo['bindingModels'] as $bindingModelName) {
                 $refClass = new \ReflectionClass($bindingModelName);
 
@@ -124,9 +133,19 @@ class FrontController {
 
                 $this->getRouter()->routeParams[] = $bindingModel;
             }
+
+            if(Request::needToChangeCsrf()) {
+                if(Csrf::getCSRFToken() != $csrfToken) {
+                    throw new \Exception("Invalid token");
+                }
+            }
         }
 
         call_user_func_array(array($this->getController(), $this->getRouter()->getAction()), $this->getRouter()->routeParams);
+
+        if(Request::needToChangeCsrf()) {
+            Csrf::setCSRFToken();
+        }
     }
 
     private function initRequest() {
