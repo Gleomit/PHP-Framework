@@ -20,7 +20,7 @@ class RouteScanner
                 if($controllerClassName != 'BaseController') {
                     $controller = new $controllerFullClassName();
 
-                    $controllersRoutes[$controllerClassName] = self::getControllerRoutes($controller);
+                    $controllersRoutes[$controllerClassName] = $this->getControllerRoutes($controller);
                 }
             }
         }
@@ -70,7 +70,7 @@ class RouteScanner
                         if($controllerClassName != 'BaseController') {
                             $controller = new $controllerFullClassName();
 
-                            $controllerRoutes = self::getControllerRoutes($controller, strtolower($areaFolder));
+                            $controllerRoutes = $this->getControllerRoutes($controller, strtolower($areaFolder));
                             $areasRoutes[$areaFolder][$controllerClassName] = $controllerRoutes;
                         }
                     }
@@ -95,7 +95,7 @@ class RouteScanner
         return $areasRoutes;
     }
 
-    private static function getControllerRoutes($controller, $areaName = null) {
+    private function getControllerRoutes($controller, $areaName = null) {
         $refClass = new \ReflectionClass($controller);
         $methods = $refClass->getMethods();
 
@@ -136,32 +136,40 @@ class RouteScanner
                 $methodArray['roles'] = [];
                 $methodArray['parameters'] = [];
                 $methodArray['areaName'] = "";
-
+                $methodArray['bindingModels'] = [];
 
                 if(count($methodRoute[0]) > 0) {
                     $methodKey = $baseRoute . $methodRoute[1][0];
                     $methodArray['route'] = $methodKey;
+                }
 
-                    preg_match_all("/\/*(\{(\w+):(\w+)\})\/*/", $methodRoute[1][0], $methodParameters);
+                preg_match_all("/\/*(\{(\w+):(\w+)\})\/*/", $methodArray['route'], $methodParameters);
 
-                    $params = [];
+                $params = [];
 
-                    // check if parameters are equal(length and signature)
+                // check if parameters are equal(length and signature)
 
-                    for($i = 0; $i < count($methodParameters[0]); $i++) {
-                        $params[$methodParameters[2][$i]] = $methodParameters[3][$i];
+                for($i = 0; $i < count($methodParameters[0]); $i++) {
+                    $params[$methodParameters[2][$i]] = $methodParameters[3][$i];
 
-                        switch($methodParameters[3]{$i}) {
-                            case 'num': {
-                                $methodKey = preg_replace("/(\{(\w+):(\w+)\})/", "\d+", $methodKey);
-                            }
-                            case 'any': {
-                                $methodKey = preg_replace("/\/*(\{(\w+):(\w+)\})\/*/", ".*", $methodKey);
-                            }
+                    switch($methodParameters[3]{$i}) {
+                        case 'num': {
+                            $methodKey = preg_replace("/(\{(\w+):(\w+)\})/", "\d+", $methodKey);
+                            break;
+                        }
+                        case 'any': {
+                            $methodKey = preg_replace("/\/*(\{(\w+):(\w+)\})\/*/", ".*", $methodKey);
+                            break;
                         }
                     }
+                }
 
-                    $methodArray['parameters'] = $params;
+                $methodArray['parameters'] = $params;
+
+                $result = $this->checkMethodSignature(array_keys($methodArray['parameters']), $method);
+
+                if($result != null) {
+                    $methodArray['bindingModels'] = $result;
                 }
 
                 if(count($methodType[0]) > 0) {
@@ -194,5 +202,45 @@ class RouteScanner
         }
 
         return $resultMethods;
+    }
+
+    private function checkMethodSignature($routeParams, \ReflectionMethod $method) {
+        $methodParams = $method->getParameters();
+
+        $bindingModels = $this->checkForBindingModels($methodParams);
+
+        if($bindingModels != false) {
+            for($i = 0; $i < count($bindingModels); $i++) {
+                array_pop($methodParams);
+            }
+        }
+
+        if(count($methodParams) != count($routeParams)) {
+            throw new \Exception("Mismatch between parameters count in method signature and route signature");
+        }
+
+        foreach($methodParams as $param) {
+            if(!in_array($param->getName(), $routeParams)) {
+                throw new \Exception("Mismatch between parameter names in method signature and route signature");
+            }
+        }
+
+        return $bindingModels;
+    }
+
+    private function checkForBindingModels(array $parameters) {
+        $bindingModels = [];
+
+        foreach($parameters as $param) {
+            if($param->getClass() != NULL && strpos($param->getClass()->getName(), "BindingModels") != false) {
+                $bindingModels[] = $param->getClass()->getName();
+            }
+        }
+
+        if(count($bindingModels) > 0) {
+            return $bindingModels;
+        }
+
+        return false;
     }
 }

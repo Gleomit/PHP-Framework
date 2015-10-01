@@ -2,6 +2,7 @@
 
 namespace DF\Controllers;
 
+use DF\BindingModels\TestBindingModel;
 use DF\Controllers\BaseController;
 use DF\Helpers\ViewHelpers\FormViewHelper;
 
@@ -14,10 +15,10 @@ class TestController extends BaseController
 {
     /**
      * @GET
-     * @Authorize
+     *
      * @Route("")
      */
-    public function index () {
+    public function index (TestBindingModel $model) {
         echo FormViewHelper::init()
             ->initTextField()
             ->setAttribute('value', 'test')
@@ -26,17 +27,17 @@ class TestController extends BaseController
     }
 
     /**
-     * @Route("blqblq/{id:num}")
+     * @Route("blqblq/{id:num}/{test:num}")
      * @POST
      */
-    public function madafaka($id) {
+    public function madafaka($id, $test) {
 
     }
 
     /**
-     * @Route("{id:num}/profile/{id:num}")
+     * @Route("{id:num}/profile/{test:num}")
      */
-    public function testMe() {
+    public function testMe($id, $test) {
         echo 'profileeeeeeeeeeeeeeeeeee';
     }
 }

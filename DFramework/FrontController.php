@@ -117,9 +117,9 @@ class FrontController {
 
         $refMethodParams = $refMethod->getParameters();
 
-        if(count($refMethodParams) != count($this->getRouter()->routeInfo['parameters']))
+        //if(count($refMethodParams) != count($this->getRouter()->routeInfo['parameters']))
 
-        var_dump($refMethod->getParameters());
+        //var_dump($this->getRouter()->routeInfo);
     }
 
     private function isRequestMethodSignatureValid() {
