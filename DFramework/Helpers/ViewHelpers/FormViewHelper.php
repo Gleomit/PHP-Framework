@@ -5,6 +5,7 @@ namespace DF\Helpers\ViewHelpers;
 use DF\Helpers\ViewHelpers\Elements\Checkbox;
 use DF\Helpers\ViewHelpers\Elements\PasswordField;
 use DF\Helpers\ViewHelpers\Elements\RadioButton;
+use DF\Helpers\ViewHelpers\Elements\SubmitButton;
 use DF\Helpers\ViewHelpers\Elements\TextArea;
 use DF\Helpers\ViewHelpers\Elements\TextField;
 
@@ -123,5 +124,9 @@ class FormViewHelper
 
     public static function initCheckbox() {
         return new Checkbox();
+    }
+
+    public static function initSubmitButton() {
+        return new SubmitButton();
     }
 }

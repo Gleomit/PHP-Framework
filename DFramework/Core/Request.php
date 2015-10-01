@@ -35,8 +35,8 @@ class Request
         return new Request($params, $type);
     }
 
-    private static function setParam() {
-
+    public function getType() {
+        return $this->type;
     }
 
     public function getParams() {

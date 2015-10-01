@@ -9,7 +9,7 @@ class Router extends AbstractRouter
 {
     private $controller = "";
     private $action = "";
-    private $requestParams;
+    public $routeParams = [];
 
     public $routeInfo = [];
 
@@ -44,6 +44,13 @@ class Router extends AbstractRouter
                 $this->controller = $routeInfo['controller'];
                 $this->action = $routeInfo['action'];
                 $valid = true;
+
+                if(count($test) > 1) {
+                    for($i = 1; $i < count($routeInfo['parameters']) + 1; $i++) {
+                        $this->routeParams[] = $test[$i];
+                    }
+                }
+
                 break;
             }
         }

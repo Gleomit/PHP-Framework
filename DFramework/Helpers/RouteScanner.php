@@ -154,7 +154,7 @@ class RouteScanner
 
                     switch($methodParameters[3]{$i}) {
                         case 'num': {
-                            $methodKey = preg_replace("/(\{(\w+):(\w+)\})/", "\d+", $methodKey);
+                            $methodKey = preg_replace("/(\{(\w+):(\w+)\})/", "(\d+)", $methodKey);
                             break;
                         }
                         case 'any': {

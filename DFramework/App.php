@@ -7,6 +7,7 @@ use DF\Core\View;
 use DF\Helpers\RouteScanner;
 use DF\Helpers\Session;
 use DF\Routing\Router;
+use DF\Services\RouteService;
 
 class App {
 
@@ -22,6 +23,8 @@ class App {
         error_reporting(E_ALL);
 
         Session::start();
+
+        $this->initRouteService();
 
         $this->registerDatabaseConfiguration();
 
@@ -45,6 +48,13 @@ class App {
 
     public function getFrontController() {
         return $this->frontController;
+    }
+
+    private function initRouteService() {
+        $phpSelf = $_SERVER['PHP_SELF'];
+        $index = basename($phpSelf);
+
+        RouteService::init(str_replace($index, '', $phpSelf));
     }
 
     /**

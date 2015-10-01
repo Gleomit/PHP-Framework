@@ -5,6 +5,7 @@ namespace DF\Controllers;
 use DF\BindingModels\TestBindingModel;
 use DF\Controllers\BaseController;
 use DF\Helpers\ViewHelpers\FormViewHelper;
+use DF\Services\RouteService;
 
 /**
  *
@@ -14,30 +15,35 @@ use DF\Helpers\ViewHelpers\FormViewHelper;
 class TestController extends BaseController
 {
     /**
-     * @GET
+     * @POST
      *
      * @Route("")
      */
     public function index (TestBindingModel $model) {
-        echo FormViewHelper::init()
-            ->initTextField()
-            ->setAttribute('value', 'test')
-            ->create()
-            ->render();
+        echo $model->property;
     }
 
     /**
      * @Route("blqblq/{id:num}/{test:num}")
-     * @POST
+     *
      */
     public function madafaka($id, $test) {
-
+        echo $id . '/' . $test;
     }
 
     /**
-     * @Route("{id:num}/profile/{test:num}")
+     * @Route("test")
      */
-    public function testMe($id, $test) {
-        echo 'profileeeeeeeeeeeeeeeeeee';
+    public function testMe() {
+        echo FormViewHelper::init()
+            ->initTextField()
+            ->setAttribute('value', 'test')
+            ->setName('r')
+            ->create()
+            ->setMethod("POST")
+            ->setAction(RouteService::getUrl('test', ''))
+            ->initSubmitButton()
+            ->create()
+            ->render();
     }
 }

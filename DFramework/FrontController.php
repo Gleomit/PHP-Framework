@@ -23,6 +23,9 @@ class FrontController {
      * @var /DF/Routing/Router
      */
     private $router;
+    /**
+     * @var Request
+     */
     private $request;
 
     public function __construct(App $app, View $view) {
@@ -33,11 +36,10 @@ class FrontController {
 
     public function dispatch() {
         try {
+            $this->initRequest();
             $this->getRouter()->parseUrl();
-            //$this->initRequest();
             $this->initController();
-            $this->initAction();
-            //$this->controller->render();
+            $this->invokeTheRoute();
         } catch (\Exception $e) {
             echo $e->getMessage();
             return false;
@@ -75,30 +77,11 @@ class FrontController {
             }
 
             $this->controllerString = $class;
-            $this->controller = new $class($this->app, $this->view, $this->request);
-            $this->isRequestMethodValid();
+            $this->controller = new $class();
         }
     }
-    private function initAction() {
-        if (!empty($this->getRouter()->getAction())) {
-            $this->action = $this->getRouter()->getAction();
-            $this->invokeAction();
-        }
-    }
-    private function invokeAction() {
-        if (!method_exists($this->getController(), $this->action)) {
-            throw new \Exception("Undefined method.");
-        }
 
-        $action = $this->action;
-
-        $this->getController()->$action();
-    }
-
-    private function isRequestMethodValid(){
-        $refClass = new \ReflectionClass($this->controllerString);
-        $refMethod = $refClass->getMethod($this->getRouter()->getAction());
-
+    private function invokeTheRoute(){
         if($_SERVER['REQUEST_METHOD'] != $this->getRouter()->routeInfo['requestType']) {
             throw new \Exception("Wrong request method.");
         }
@@ -113,17 +96,37 @@ class FrontController {
             }
         }
 
-        //binding models and parameter mapping - needs to be implemented
+        if(count($this->getRouter()->routeInfo['bindingModels']) > 0) {
+            if(count($this->request->getParams()) == 0) {
+               throw new \Exception("Action expecting post/put binding model, request has 0");
+            }
 
-        $refMethodParams = $refMethod->getParameters();
+            $requestParameters = $this->request->getParams();
+            $requestParamsKeys = array_keys($requestParameters);
 
-        //if(count($refMethodParams) != count($this->getRouter()->routeInfo['parameters']))
+            foreach($this->getRouter()->routeInfo['bindingModels'] as $bindingModelName) {
+                $refClass = new \ReflectionClass($bindingModelName);
 
-        //var_dump($this->getRouter()->routeInfo);
-    }
+                $bindingModel = new $bindingModelName();
 
-    private function isRequestMethodSignatureValid() {
+                foreach($refClass->getProperties() as $property) {
+                    $propertyName = $property->getName();
 
+                    if(!in_array($propertyName, $requestParamsKeys)) {
+                        throw new \Exception("Binding model does not have property with name: $propertyName");
+                    }
+
+                    $bindingModel->$propertyName = $requestParameters[$propertyName];
+
+                    unset($requestParameters[$propertyName]);
+                    unset($requestParamsKeys[array_search($propertyName, $requestParamsKeys)]);
+                }
+
+                $this->getRouter()->routeParams[] = $bindingModel;
+            }
+        }
+
+        call_user_func_array(array($this->getController(), $this->getRouter()->getAction()), $this->getRouter()->routeParams);
     }
 
     private function initRequest() {
