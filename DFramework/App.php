@@ -25,11 +25,11 @@ class App {
 
         $this->registerDatabaseConfiguration();
 
-        RouteScanner::performScan();
+//        RouteScanner::performScan();
 
         $this->frontController = new FrontController($this, new View());
         $this->frontController->setRouter(new Router());
-        //$this->frontController->dispatch();
+        $this->frontController->dispatch();
     }
 
     private function registerDatabaseConfiguration() {

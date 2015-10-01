@@ -2,11 +2,11 @@
 
 namespace DF\Helpers\ViewHelpers;
 
-use DF\Library\ViewHelpers\Elements\Checkbox;
-use DF\Library\ViewHelpers\Elements\PasswordField;
-use DF\Library\ViewHelpers\Elements\RadioButton;
-use DF\Library\ViewHelpers\Elements\TextArea;
-use DF\Library\ViewHelpers\Elements\TextField;
+use DF\Helpers\ViewHelpers\Elements\Checkbox;
+use DF\Helpers\ViewHelpers\Elements\PasswordField;
+use DF\Helpers\ViewHelpers\Elements\RadioButton;
+use DF\Helpers\ViewHelpers\Elements\TextArea;
+use DF\Helpers\ViewHelpers\Elements\TextField;
 
 class FormViewHelper
 {

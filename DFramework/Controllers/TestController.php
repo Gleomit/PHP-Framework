@@ -13,9 +13,9 @@ use DF\Helpers\ViewHelpers\FormViewHelper;
 class TestController extends BaseController
 {
     /**
-     * @Route("test/")
-     * @PUT
+     * @GET
      * @Authorize
+     * @Route("")
      */
     public function index () {
         echo FormViewHelper::init()
@@ -23,5 +23,20 @@ class TestController extends BaseController
             ->setAttribute('value', 'test')
             ->create()
             ->render();
+    }
+
+    /**
+     * @Route("blqblq/{id:num}")
+     * @POST
+     */
+    public function madafaka($id) {
+
+    }
+
+    /**
+     * @Route("{id:num}/profile/{id:num}")
+     */
+    public function testMe() {
+        echo 'profileeeeeeeeeeeeeeeeeee';
     }
 }
