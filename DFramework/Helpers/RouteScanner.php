@@ -12,10 +12,12 @@ class RouteScanner
 
         $declaredControllerFiles = scandir('Controllers');
 
+        $controllersNamespace = AppConfig::FRAMEWORK_CONTROLLERS_NAMESPACE;
+
         foreach($declaredControllerFiles as $fileName){
             if(strpos($fileName, '.php') != false){
                 $controllerClassName = (substr($fileName, 0, strlen($fileName) - 4));
-                $controllerFullClassName = AppConfig::CONTROLLERS_NAMESPACE . $controllerClassName;
+                $controllerFullClassName = $controllersNamespace . '\\' . $controllerClassName;
 
                 if($controllerClassName != 'BaseController') {
                     $controller = new $controllerFullClassName();
@@ -45,6 +47,9 @@ class RouteScanner
 
         $areasFolders = scandir($areasFolder);
 
+        $areasNamespace = AppConfig::FRAMEWORK_NAMESPACE . '\\Areas';
+
+
         foreach($areasFolders as $areaFolder){
             if(ctype_alnum($areaFolder) && is_dir($areasFolder . '/' . $areaFolder)) {
                 $declaredControllers = scandir($areasFolder . '/' . $areaFolder);
@@ -61,9 +66,7 @@ class RouteScanner
                     if(strpos($fileName, '.php') != false){
                         $controllerClassName = (substr($fileName, 0, strlen($fileName) - 4));
 
-                        //DF/Areas . AreaName . / Controllers . / ControllerName
-
-                        $controllerFullClassName = 'DF\\Areas\\' . $areaFolder . '\\Controllers\\' . $controllerClassName;
+                        $controllerFullClassName = $areasNamespace . '\\' . $areaFolder . '\\Controllers\\' . $controllerClassName;
 
                         $controllerRoutes = [];
 

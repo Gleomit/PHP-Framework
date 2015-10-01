@@ -17,18 +17,6 @@ class Router extends AbstractRouter
 
     }
 
-    private function loadAllRoutes() {
-        $scanner = new RouteScanner();
-
-        $areasRoutes = $scanner->getAreasControllersRoutes("Areas", true);
-
-        $baseControllersRoutes = $scanner->getAllControllersRoutes(true);
-
-        $routes = array_merge($areasRoutes, $baseControllersRoutes);
-
-        return $routes;
-    }
-
     public function parseUrl() {
         $routes = $this->loadAllRoutes();
 
@@ -66,5 +54,17 @@ class Router extends AbstractRouter
 
     public function getAction() {
         return $this->action;
+    }
+
+    private function loadAllRoutes() {
+        $scanner = new RouteScanner();
+
+        $areasRoutes = $scanner->getAreasControllersRoutes("Areas", true);
+
+        $baseControllersRoutes = $scanner->getAllControllersRoutes(true);
+
+        $routes = array_merge($areasRoutes, $baseControllersRoutes);
+
+        return $routes;
     }
 }

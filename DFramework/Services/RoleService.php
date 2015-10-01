@@ -8,7 +8,7 @@ use DF\Core\Database;
 
 class RoleService
 {
-    public static function userInRole($userId, $roles) {
+    public static function userInRoles($userId, array $roles) {
         $db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
 
         //check if roles are valid

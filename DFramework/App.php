@@ -2,8 +2,6 @@
 
 namespace DF;
 
-use DF\FrontController;
-use DF\Core\View;
 use DF\Helpers\Csrf;
 use DF\Helpers\RouteScanner;
 use DF\Helpers\Session;
@@ -34,8 +32,7 @@ class App {
         }
 //        RouteScanner::performScan();
 
-        $this->frontController = new FrontController($this, new View());
-        $this->frontController->setRouter(new Router());
+        $this->frontController = new FrontController(new Router());
         $this->frontController->dispatch();
     }
 

@@ -12,13 +12,7 @@ use DF\Services\RoleService;
 
 class FrontController {
     private $controller;
-    private $action;
     private $controllerString;
-    /**
-     * @var View
-     */
-    private $view;
-    private $app;
 
     /**
      * @var /DF/Routing/Router
@@ -29,10 +23,8 @@ class FrontController {
      */
     private $request;
 
-    public function __construct(App $app, View $view) {
-        $this->app = $app;
-        $this->view = $view;
-        $this->view->setFrontController($this);
+    public function __construct(Router $router) {
+        $this->router = $router;
     }
 
     public function dispatch() {
@@ -64,8 +56,7 @@ class FrontController {
 
     private function initController() {
         if (!empty($this->getRouter()->getController())) {
-            $classString = 'DF';
-
+            $classString = AppConfig::FRAMEWORK_NAMESPACE;
 
             if(!empty($this->getRouter()->routeInfo['areaName'])) {
                 $classString .= '\\Areas\\' . $this->getRouter()->routeInfo['areaName'];
@@ -82,24 +73,44 @@ class FrontController {
         }
     }
 
+    private function initRequest() {
+        $this->request = Request::handle();
+    }
+
     private function invokeTheRoute(){
+        $this->checkRequestMethod();
+        $this->checkAuthorization();
+        $this->checkActionSignature();
+
+        call_user_func_array(array($this->getController(), $this->getRouter()->getAction()), $this->getRouter()->routeParams);
+
+        if(Request::needToChangeCsrf()) {
+            Csrf::setCSRFToken();
+        }
+    }
+
+    private function checkRequestMethod() {
         if($_SERVER['REQUEST_METHOD'] != $this->getRouter()->routeInfo['requestType']) {
             throw new \Exception("Wrong request method.");
         }
+    }
 
+    private function checkAuthorization() {
         if(!Session::exists('userId') && $this->getRouter()->routeInfo['authorize'] == true) {
             throw new \Exception("Unauthorized");
         }
 
         if(count($this->getRouter()->routeInfo['roles']) > 0) {
-            if(!RoleService::userInRole(Session::get('userId'), $this->getRouter()->routeInfo['roles'])) {
+            if(!RoleService::userInRoles(Session::get('userId'), $this->getRouter()->routeInfo['roles'])) {
                 throw new \Exception("You do not have the rights");
             }
         }
+    }
 
+    private function checkActionSignature() {
         if(count($this->getRouter()->routeInfo['bindingModels']) > 0) {
             if(count($this->request->getParams()) == 0) {
-               throw new \Exception("Action expecting post/put binding model, request has 0");
+                throw new \Exception("Action expecting post/put binding model, request has 0");
             }
 
             $requestParameters = $this->request->getParams();
@@ -140,15 +151,5 @@ class FrontController {
                 }
             }
         }
-
-        call_user_func_array(array($this->getController(), $this->getRouter()->getAction()), $this->getRouter()->routeParams);
-
-        if(Request::needToChangeCsrf()) {
-            Csrf::setCSRFToken();
-        }
-    }
-
-    private function initRequest() {
-        $this->request = Request::handle();
     }
 }
