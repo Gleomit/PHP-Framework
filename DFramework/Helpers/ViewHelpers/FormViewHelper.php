@@ -31,7 +31,7 @@ class FormViewHelper
     }
 
     public static function render() {
-        self::setAttribute('class', implode(' ', self::$classes));
+        self::$attributes['class'] = implode(' ', self::$classes);
 
         $attributesString = "";
 

@@ -39,6 +39,7 @@ class TestController extends BaseController
             ->initTextField()
             ->setAttribute('value', 'test')
             ->setName('property')
+            ->setAttribute('class', 'test')
             ->create()
             ->setMethod("POST")
             ->setAction(RouteService::getUrl('test', ''))

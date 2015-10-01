@@ -18,7 +18,7 @@ abstract class Element
     }
 
     public function setAttribute($attribute, $value) {
-        if(strtolower($attribute) == "class") {
+        if($attribute === "class") {
             if(is_array($value)) {
                 $this->classes = array_merge($this->classes, $value);
             } else {
@@ -58,7 +58,7 @@ abstract class Element
     }
 
     public function create(){
-        $this->setAttribute('class', implode(' ', $this->classes));
+        $this->attributes["class"] = implode(' ', $this->classes);
 
         FormViewHelper::$elements[] = $this;
 
