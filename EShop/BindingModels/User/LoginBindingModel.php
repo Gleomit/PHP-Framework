@@ -1,6 +1,6 @@
 <?php
 
-namespace DF\BindingModels;
+namespace DF\BindingModels\User;
 
 class LoginBindingModel implements IBindingModel
 {

@@ -33,4 +33,8 @@ class Statement
     public function rowCount() {
         return $this->statement->rowCount();
     }
+
+    public function errorInfo() {
+        return $this->statement->errorInfo();
+    }
 }
