@@ -82,7 +82,11 @@ class FrontController {
         $this->checkAuthorization();
         $this->checkActionSignature();
 
-        call_user_func_array(array($this->getController(), $this->getRouter()->getAction()), $this->getRouter()->routeParams);
+        try {
+            call_user_func_array(array($this->getController(), $this->getRouter()->getAction()), $this->getRouter()->routeParams);
+        } catch(\Exception $e) {
+            echo $e->getMessage();
+        }
 
         if(Request::needToChangeCsrf()) {
             Csrf::setCSRFToken();
