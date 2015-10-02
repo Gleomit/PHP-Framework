@@ -36,11 +36,11 @@ class RoleService
         return false;
     }
 
-    private static function getRoles() {
+    public static function getRoles() {
         $db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
 
         $result = $db->prepare("
-            SELECT * FROM user_roles
+            SELECT * FROM roles
         ");
 
         $result->execute();
@@ -48,9 +48,9 @@ class RoleService
         $roles = [];
 
         if($result->rowCount() > 0) {
-            $roles = $result->fetchAll();
+            $roles = $result->fetchAll(\PDO::FETCH_KEY_PAIR);
         }
 
-        return $roles;
+        return array_flip($roles);
     }
 }

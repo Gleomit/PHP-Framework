@@ -3,6 +3,7 @@
 namespace DF\Helpers;
 
 
+use DF\App;
 use DF\Config\AppConfig;
 
 class RouteScanner
@@ -125,10 +126,14 @@ class RouteScanner
                 preg_match_all("/@Route\(\"(.*)\"\)/", $methodDoc, $methodRoute);
                 preg_match_all("/@GET|@PUT|@DELETE|@POST/", $methodDoc, $methodType);
                 preg_match_all("/@Authorize/", $methodDoc, $methodAuthorize);
-                preg_match_all("/@Roles\(.*\)/", $methodDoc, $methodRoles);
+                preg_match_all("/@Roles\((.*)\)/", $methodDoc, $methodRoles);
                 preg_match_all("/@Anonymous/", $methodDoc, $methodAnonymous);
 
-                $methodKey = $baseRoute . $method->getName();
+                $methodKey = $baseRoute;
+
+                if($method->getName() != 'index') {
+                    $methodKey .= $method->getName();
+                }
 
                 $methodArray = [];
                 $methodArray['route'] = $methodKey;
@@ -149,8 +154,6 @@ class RouteScanner
                 preg_match_all("/\/*(\{(\w+):(\w+)\})\/*/", $methodArray['route'], $methodParameters);
 
                 $params = [];
-
-                // check if parameters are equal(length and signature)
 
                 for($i = 0; $i < count($methodParameters[0]); $i++) {
                     $params[$methodParameters[2][$i]] = $methodParameters[3][$i];
@@ -186,7 +189,14 @@ class RouteScanner
                 }
 
                 if(count($methodRoles[0]) > 0) {
-                    $methodArray['roles'] = explode(',', $methodRoles[0]);
+                    $methodArray['roles'] = preg_split('/\s*,\s*/', $methodRoles[1][0]);
+
+                    foreach($methodArray['roles'] as $role) {
+                        if(!isset(App::$roles[$role])) {
+                            throw new \Exception("Unknown role: $role");
+                        }
+                    }
+
                     $methodArray['authorize'] = true;
                 }
 

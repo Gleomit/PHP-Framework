@@ -16,4 +16,8 @@ class AppConfig
     const DEFAULT_CONTROLLER_ACTION = 'index';
 
     const PASSWORD_HASH_ALGORITHM = PASSWORD_DEFAULT;
+
+    const DEFAULT_USER_ROLE = 'User';
+    const ADMIN_USER_ROLE = 'Administrator';
+    const EDITOR_USER_ROLE = 'Editor';
 }

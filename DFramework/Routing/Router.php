@@ -3,6 +3,7 @@
 namespace DF\Routing;
 
 
+use DF\Core\Request;
 use DF\Helpers\RouteScanner;
 
 class Router extends AbstractRouter
@@ -25,9 +26,19 @@ class Router extends AbstractRouter
         foreach($routes as $routeInfo) {
             $routeString = $routeInfo['methodPattern'];
 
-            preg_match("/\A$routeString\z/", $_GET['url'], $test);
+            $requestUrl = $_GET['url'];
 
-            if(count($test) > 0) {
+            if($requestUrl[strlen($requestUrl) - 1] === '/' && substr_count($requestUrl, '/') > 1) {
+                $requestUrl = substr($requestUrl, 0, strlen($requestUrl) - 1);
+            }
+
+            if($routeString[strlen($routeString) - 1] === '/' && substr_count($routeString, '/') > 1) {
+                $routeString = substr($routeString, 0, strlen($routeString) - 1);
+            }
+
+            preg_match("/\A$routeString\z/", $requestUrl, $test);
+
+            if(count($test) > 0 && $_SERVER['REQUEST_METHOD'] === $routeInfo['requestType']) {
                 $this->routeInfo = $routeInfo;
                 $this->controller = $routeInfo['controller'];
                 $this->action = $routeInfo['action'];

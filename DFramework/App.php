@@ -6,13 +6,14 @@ use DF\Helpers\Csrf;
 use DF\Helpers\RouteScanner;
 use DF\Helpers\Session;
 use DF\Routing\Router;
+use DF\Services\RoleService;
 use DF\Services\RouteService;
 
 class App {
 
     private static $instance = null;
     public static $WEB_SERVICE = false;
-
+    public static $roles = [];
     /**
      * @var FrontController
      */
@@ -30,6 +31,9 @@ class App {
         if(Csrf::getCSRFToken() == null) {
             Csrf::setCSRFToken();
         }
+
+        $this->loadRoles();
+
 //        RouteScanner::performScan();
 
         $this->frontController = new FrontController(new Router());
@@ -56,6 +60,10 @@ class App {
         $index = basename($phpSelf);
 
         RouteService::init(str_replace($index, '', $phpSelf));
+    }
+
+    private function loadRoles() {
+        self::$roles = RoleService::getRoles();
     }
 
     /**

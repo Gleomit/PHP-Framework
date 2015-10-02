@@ -41,4 +41,9 @@ class Session {
     public static function exists($name){
         return (isset($_SESSION[$name])) ? true : false;
     }
+
+    public static function emptyUserRelated() {
+        unset($_SESSION['userId']);
+        unset($_SESSION['role']);
+    }
 }

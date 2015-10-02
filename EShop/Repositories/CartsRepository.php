@@ -6,7 +6,7 @@ namespace DF\Repositories;
 use DF\Config\DatabaseConfig;
 use DF\Models\Cart;
 
-class CartRepository implements IRepository
+class CartsRepository implements IRepository
 {
     /**
      * @var \DF\Core\Database
