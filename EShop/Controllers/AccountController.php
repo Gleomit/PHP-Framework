@@ -1,15 +1,18 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Deyvid
- * Date: 10/2/2015
- * Time: 1:41 AM
- */
 
 namespace DF\Controllers;
 
 
+use DF\BindingModels\LoginBindingModel;
+use DF\BindingModels\RegisterBindingModel;
+
 class AccountController
 {
+    public function register(RegisterBindingModel $model) {
 
+    }
+
+    public function login(LoginBindingModel $model) {
+
+    }
 }
