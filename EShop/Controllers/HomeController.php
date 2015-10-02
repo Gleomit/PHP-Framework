@@ -7,6 +7,9 @@ use DF\Services\RouteService;
 
 class HomeController extends BaseController
 {
+    /**
+     * @return View
+     */
     public function index() {
         echo 'Blqblq';
         return new View("home", []);

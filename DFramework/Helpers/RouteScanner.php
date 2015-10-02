@@ -126,7 +126,7 @@ class RouteScanner
                 preg_match_all("/@Route\(\"(.*)\"\)/", $methodDoc, $methodRoute);
                 preg_match_all("/@GET|@PUT|@DELETE|@POST/", $methodDoc, $methodType);
                 preg_match_all("/@Authorize/", $methodDoc, $methodAuthorize);
-                preg_match_all("/@Roles\((.*)\)/", $methodDoc, $methodRoles);
+                preg_match_all("/@Roles\((.+)\)/", $methodDoc, $methodRoles);
                 preg_match_all("/@Anonymous/", $methodDoc, $methodAnonymous);
 
                 $methodKey = $baseRoute;
@@ -190,6 +190,10 @@ class RouteScanner
 
                 if(count($methodRoles[0]) > 0) {
                     $methodArray['roles'] = preg_split('/\s*,\s*/', $methodRoles[1][0]);
+
+                    if($methodArray['roles'][0] === "") {
+                        array_shift($methodArray['roles']);
+                    }
 
                     foreach($methodArray['roles'] as $role) {
                         if(!isset(App::$roles[$role])) {
