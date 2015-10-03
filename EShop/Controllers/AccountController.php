@@ -55,6 +55,15 @@ class AccountController extends BaseController
     }
 
     /**
+     * @Authorize
+     * @POST
+     * @Route("cart/checkout")
+     */
+    public function checkoutCart() {
+
+    }
+
+    /**
      * @param LoginBindingModel $model
      * @throws \Exception
      * @POST

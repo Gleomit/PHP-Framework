@@ -18,37 +18,46 @@ class CategoriesRepository implements IRepository
     }
 
     public function create(CreateCategoryBindingModel $model) {
-        $isCreated = $this->db->insertEntity(self::TABLE_NAME, array(
-            'name' => $model->getName()
-        ));
+        $statement = $this->db->prepare("
+            INSERT INTO categories (name)
+            VALUES (?)
+        ");
 
-        return $isCreated;
-    }
-
-    public function update($id, UpdateCategoryBindingModel $model) {
-        $isUpdated = $this->db->updateEntityById(
-            self::TABLE_NAME,
-            array('name' => $model->getName()),
-            $id
-        );
-
-        return $isUpdated;
-    }
-
-    public function remove($id) {
-        $category = $this->findById($id);
-
-        if($category == null) {
-            throw new \Exception("Category with such id does not exist");
+        if(!$statement->execute([$model->getName()])) {
+            echo $statement->errorInfo();
+            return false;
         }
 
-        $isDeleted = $this->db->updateEntityById(
-            self::TABLE_NAME,
-            array('isDeleted' => 1),
-            $id
-        );
+        return true;
+    }
 
-        return $isDeleted;
+    public function update($categoryId, UpdateCategoryBindingModel $model) {
+        $statement = $this->db->prepare("
+            UPDATE categories
+            SET name = ?
+            WHERE id = ?
+        ");
+
+        if(!$statement->execute([$model->getName(), $categoryId])) {
+            echo $statement->errorInfo();
+            return false;
+        }
+
+        return true;
+    }
+
+    public function remove($categoryId) {
+        $statement = $this->db->prepare("
+            DELETE FROM categories
+            WHERE id = ?
+        ");
+
+        if(!$statement->execute([$categoryId])) {
+            echo $statement->errorInfo();
+            return false;
+        }
+
+        return true;
     }
 
     public function getCategories() {
@@ -72,11 +81,17 @@ class CategoriesRepository implements IRepository
     }
 
     public function findById($id) {
-        $data = $this->db->getEntityById(self::TABLE_NAME, $id);
+        $statement = $this->db->prepare("
+            SELECT * FROM categories WHERE id = ?
+        ");
 
-        if($data == null) {
+        $statement->execute([$id]);
+
+        if($statement->rowCount() <= 0) {
             return null;
         }
+
+        $data = $statement->fetch();
 
         $category = new Category($data);
 

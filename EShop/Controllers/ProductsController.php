@@ -36,6 +36,15 @@ class ProductsController extends BaseController
     }
 
     /**
+     * @Authorize
+     * @Route("{id:num}/add")
+     * @POST
+     */
+    public function addToCard($id) {
+
+    }
+
+    /**
      * @PUT
      * @Roles(Administrator, Editor)
      * @Route("{id:num}/quantity")

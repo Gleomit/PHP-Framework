@@ -20,4 +20,10 @@ class AppConfig
     const DEFAULT_USER_ROLE = 'User';
     const ADMIN_USER_ROLE = 'Administrator';
     const EDITOR_USER_ROLE = 'Editor';
+
+    const PROMOTION_TYPES = array(
+        'All Products' => '1',
+        'Certain Products' => '2',
+        'Certain Categories' => '3',
+        'User criteria' => '4');
 }

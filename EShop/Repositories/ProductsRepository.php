@@ -37,6 +37,7 @@ class ProductsRepository implements IRepository
         return true;
     }
 
+
     public function remove($id) {
 
     }
