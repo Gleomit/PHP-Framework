@@ -7,6 +7,7 @@ use DF\App;
 use DF\BindingModels\User\LoginBindingModel;
 use DF\BindingModels\User\RegisterBindingModel;
 use DF\Config\AppConfig;
+use DF\Core\View;
 use DF\Helpers\Session;
 use DF\Services\EShopData;
 use DF\Services\RouteService;
@@ -28,7 +29,15 @@ class AccountController extends BaseController
      * @Authorize
      */
     public function profile() {
-        echo 'logged in';
+        return new View('user/profile', []);
+    }
+
+    /**
+     * @Authorize
+     */
+    public function cart() {
+
+        return new View('user/cart', []);
     }
 
     /**

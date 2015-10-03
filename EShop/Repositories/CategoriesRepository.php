@@ -28,6 +28,10 @@ class CategoriesRepository implements IRepository
             return false;
         }
 
+        if($statement->rowCount() <= 0) {
+            return false;
+        }
+
         return true;
     }
 
@@ -40,6 +44,10 @@ class CategoriesRepository implements IRepository
 
         if(!$statement->execute([$model->getName(), $categoryId])) {
             echo $statement->errorInfo();
+            return false;
+        }
+
+        if($statement->rowCount() <= 0) {
             return false;
         }
 
@@ -65,10 +73,7 @@ class CategoriesRepository implements IRepository
             SELECT * FROM categories
         ");
 
-        if(!$statement->execute()) {
-            echo $statement->errorInfo();
-            return false;
-        }
+        $statement->execute();
 
         $data = $statement->fetchAll();
         $categories = [];
@@ -87,13 +92,12 @@ class CategoriesRepository implements IRepository
 
         $statement->execute([$id]);
 
-        if($statement->rowCount() <= 0) {
-            return null;
+        $category = null;
+
+        if($statement->rowCount() > 0) {
+            $data = $statement->fetch();
+            $category = new Category($data);
         }
-
-        $data = $statement->fetch();
-
-        $category = new Category($data);
 
         return $category;
     }

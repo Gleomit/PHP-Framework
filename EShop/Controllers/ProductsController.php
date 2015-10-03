@@ -3,6 +3,7 @@
 namespace DF\Controllers;
 
 
+use DF\BindingModels\Product\ChangeProductCategoryBindingModel;
 use DF\BindingModels\Product\CreateProductBindingModel;
 use DF\Services\EShopData;
 use DF\Services\RouteService;
@@ -36,6 +37,15 @@ class ProductsController extends BaseController
     }
 
     /**
+     * @param $id
+     * @Authorize
+     * @Route("{id:num}/comment")
+     */
+    public function commentProduct($id) {
+
+    }
+
+    /**
      * @Authorize
      * @Route("{id:num}/add")
      * @POST
@@ -63,11 +73,17 @@ class ProductsController extends BaseController
     }
 
     /**
-     * @PUT
+     * @POST
      * @Roles(Administrator, Editor)
      * @Route("{id:num}")
      */
-    public function changeCategory($id) {
+    public function changeCategory($id, ChangeProductCategoryBindingModel $model) {
+        $result = $this->eshopData->getProductsRepository()->changeCategory($id, $model->getCategoryId());
 
+        if($result) {
+            RouteService::redirect('products', '', [$id], true);
+        }
+
+        return false;
     }
 }

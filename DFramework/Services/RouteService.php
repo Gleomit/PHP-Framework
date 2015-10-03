@@ -26,8 +26,11 @@ class RouteService
     public static function getUrl($controller, $action, $requestParams = []) {
         $location = self::$basePath
             . "$controller/"
-            . "$action/"
-            . implode("/", $requestParams);
+            . "$action/";
+
+        if(count($requestParams) > 0) {
+            $location .= implode("/", $requestParams);
+        }
 
         return $location;
     }

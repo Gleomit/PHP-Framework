@@ -17,7 +17,7 @@ class CategoriesController extends BaseController
     private $eshopData;
 
     public function __construct() {
-        $this->_eshopData = new EShopData();
+        $this->eshopData = new EShopData();
     }
 
     public function all() {
@@ -31,12 +31,14 @@ class CategoriesController extends BaseController
     /**
      * @param CreateCategoryBindingModel $model
      * @Roles(Administrator, Editor)
+     * @Route("")
+     * @POST
      */
     public function add(CreateCategoryBindingModel $model) {
         $isCreated = $this->eshopData->getCategoriesRepository()->create($model);
 
         if($isCreated) {
-            RouteService::redirect('categories', 'all', true);
+            RouteService::redirect('categories', '', true);
         }
 
         echo 'Error during create category';
@@ -59,13 +61,10 @@ class CategoriesController extends BaseController
      * @Route("{categoryId:num}/products")
      */
     public function getProducts($categoryId) {
-        $userId = $this->getCurrentUserId();
-        $userCartId = $this->eshopData->getCartsRepository()->getCartForCurrentUser($userId);
-        $products = $this->eshopData->getCategoriesRepository()->getAllProducts($userId, $userCartId, $categoryId);
+        $categories = $this->eshopData->getCategoriesRepository()->findById($categoryId);
 
-        $viewModel = new CategoryProductsViewModel();
-        $viewModel->productViewModel = $products;
+        var_dump($categories);
 
-        return new View('category/products', $viewModel);
+        //return new View('category/products', $viewModel);
     }
 }

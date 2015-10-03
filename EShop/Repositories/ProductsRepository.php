@@ -3,6 +3,7 @@
 namespace DF\Repositories;
 
 
+use DF\BindingModels\Comment\CreateCommentBindingModel;
 use DF\BindingModels\Product\CreateProductBindingModel;
 use DF\Config\DatabaseConfig;
 use DF\Models\Product;
@@ -34,20 +35,92 @@ class ProductsRepository implements IRepository
             return false;
         }
 
+        if($statement->rowCount() <= 0) {
+            return false;
+        }
+
         return true;
     }
-
 
     public function remove($id) {
 
     }
 
-    public function findById($id) {
-        $data = $this->db->getEntityById(self::TABLE_NAME, $id);
+    public function addComment($userId, $productId, CreateCommentBindingModel $commentModel) {
+        $statement = $this->db->prepare("
+            INSERT INTO comments (comment_data, comment_date, user_id, product_id)
+            VALUES (?, NOW(), ?, ?)
+        ");
 
-        if($data == null) {
-            throw new \Exception("Product with such id does not exists");
+        $data = [
+            $commentModel->getCommentText(),
+            $userId,
+            $productId
+        ];
+
+        if(!$statement->execute($data)) {
+            echo $statement->errorInfo();
+            return false;
         }
+
+        if($statement->rowCount() <= 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function changeCategory($id, $categoryId) {
+        $statement = $this->db->prepare("
+            UPDATE products
+            SET category_id = ?
+            WHERE id = ?
+        ");
+
+        $statement->execute([$categoryId, $id]);
+
+        if($statement->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function addToCart($userId, $productId) {
+        $statement = $this->db->prepare("
+            SELECT id from usercart WHERE user_id = ?
+        ");
+
+        $statement->execute([$userId]);
+
+        if($statement->rowCount() <= 0) {
+            return false;
+        }
+
+        $cartId = $statement->fetch();
+
+        $statement = $this->db->prepare("
+            INSERT INTO cart_products (cart_id, product_id)
+            VALUES (?, ?)
+        ");
+
+        $statement->execute([$cartId, $productId]);
+
+        if($statement->rowCount() <= 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public function findById($id) {
+        $statement = $this->db->prepare("
+            SELECT * FROM products WHERE id = ?
+        ");
+
+        $statement->execute([$id]);
+
+        $data = $statement->fetch();
 
         $product = new Product($data);
 

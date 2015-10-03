@@ -7,6 +7,9 @@ class View
     const VIEW_FOLDER = 'Views';
     const VIEW_EXTENSION = '.php';
 
+    const DEFAULT_HEAD_PATH = self::VIEW_FOLDER . '\\includes\\head' . self::VIEW_EXTENSION;
+    const DEFAULT_BODY_PATH = self::VIEW_FOLDER . '\\includes\\body' . self::VIEW_EXTENSION;
+
     public function __construct($filePath, $model, $escapeOutput = true){
         $fullFilePath = self::VIEW_FOLDER . '\\' . $filePath . self::VIEW_EXTENSION;
 
@@ -16,7 +19,11 @@ class View
             $model = $this->escapeOutput($model);
         }
 
+        require self::DEFAULT_HEAD_PATH;
+
         require $fullFilePath;
+
+        require self::DEFAULT_BODY_PATH;
     }
 
     private function checkExpectedModel($file, $model) {

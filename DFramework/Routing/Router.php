@@ -5,6 +5,7 @@ namespace DF\Routing;
 
 use DF\Core\Request;
 use DF\Helpers\RouteScanner;
+use DF\Services\RouteService;
 
 class Router extends AbstractRouter
 {
@@ -55,7 +56,8 @@ class Router extends AbstractRouter
         }
 
         if($valid == false) {
-            throw new \Exception("Route not found");
+//            throw new \Exception("Route not found");
+            RouteService::redirect('home', '404', [], true);
         }
     }
 

@@ -14,7 +14,6 @@ class CreateCategoryBindingModel implements IBindingModel
         if(isset($data)) {
             $this->setName($data['name']);
         }
-//        $this->setProducts($data['products']);
     }
 
     public function getName() {

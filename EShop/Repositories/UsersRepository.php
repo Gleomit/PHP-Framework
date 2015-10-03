@@ -30,14 +30,14 @@ class UsersRepository implements IRepository
 
         $statement = $this->db->prepare("
                INSERT INTO users (username, password_hash, email, register_date, cash)
-               VALUE (?, ?, ?, ?, ?)
+               VALUE (?, ?, ?, NOW(), ?)
         ");
 
         $data = [
             $model->getUsername(),
             password_hash($model->getPassword(), AppConfig::PASSWORD_HASH_ALGORITHM),
             $model->getEmail(),
-            (new \DateTime())->format('Y-m-d H:i:s'),
+//            (new \DateTime())->format('Y-m-d H:i:s'),
             $model->getCash()
         ];
 
@@ -85,13 +85,22 @@ class UsersRepository implements IRepository
     }
 
     public function findById($id) {
-        $data = $this->db->getEntityById(self::TABLE_NAME, $id);
+        $statement = $this->db->prepare("
+            SELECT * FROM users WHERE id = ?
+        ");
 
-        if($data == null) {
-            return null;
+        $statement->execute([$id]);
+
+        $data = $statement->fetch();
+
+        $user = null;
+
+        if($statement->rowCount() > 0) {
+            $data['roles'] = RoleService::getUserRoles($data['id']);
+
+            $user = new User($data);
         }
 
-        $user = new UserViewModel($data);
         return $user;
     }
 
@@ -100,15 +109,18 @@ class UsersRepository implements IRepository
             SELECT * FROM users WHERE username = ?
         ");
 
-        if(!$statement->execute([$username])) {
-            echo $statement->errorInfo();
-            return false;
-        }
+        $statement->execute([$username]);
 
         $data = $statement->fetch();
-        $data['roles'] = RoleService::getUserRoles($data['id']);
 
-        $user = new User($data);
+        $user = null;
+
+        if($statement->rowCount() > 0) {
+            $data['roles'] = RoleService::getUserRoles($data['id']);
+
+            $user = new User($data);
+        }
+
         return $user;
     }
 
@@ -120,10 +132,7 @@ class UsersRepository implements IRepository
             WHERE uc.user_id = ?
         ");
 
-        if(!$statement->execute([$userId])) {
-            echo $statement->errorInfo();
-            return false;
-        }
+        $statement->execute([$userId]);
 
         $data = $statement->fetch();
         return new Cart($data);
@@ -136,13 +145,11 @@ class UsersRepository implements IRepository
             WHERE up.user_id = ?
         ");
 
-        if(!$statement->execute([$userId])) {
-            echo $statement->errorInfo();
-            return false;
-        }
+        $statement->execute([$userId]);
+
+        $products = [];
 
         $data = $statement->fetchAll();
-        $products = [];
 
         foreach ($data as $product) {
             $userProduct = new UserProduct($product);

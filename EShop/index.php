@@ -1,3 +1,5 @@
+<!doctype html>
+<html>
 <?php
 
 require_once '../DFramework/AutoLoader.php';
@@ -6,3 +8,6 @@ require_once '../DFramework/AutoLoader.php';
 
 $app = new \DF\App();
 $app->run();
+
+?>
+</html>

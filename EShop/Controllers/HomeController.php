@@ -11,7 +11,6 @@ class HomeController extends BaseController
      * @return View)
      */
     public function index() {
-        echo 'Blqblq';
         return new View("home", []);
     }
 
@@ -32,5 +31,13 @@ class HomeController extends BaseController
         }
 
         return new View("user\\register",[]);
+    }
+
+    /**
+     * @return View
+     * @Route("404")
+     */
+    public function notFound() {
+        return new View("404", []);
     }
 }
