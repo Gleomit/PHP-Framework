@@ -51,7 +51,7 @@ class CartsRepository implements IRepository
     public function getProductsInCart($cartId) {
         $statement = $this->db->prepare("
             SELECT
-	            p.id, p.name, p.price, p.category_id, cp.quantity
+	            p.id, p.name, p.price, p.category_id, cp.quantity, p.quantity AS product_max_quantity
             FROM cart_products cp
             JOIN products p ON cp.product_id = p.id
             WHERE cp.cart_id = ?;
@@ -78,9 +78,25 @@ class CartsRepository implements IRepository
         $price = 0;
 
         foreach($products as $product) {
+            if($product['quantity'] > $product['product_max_quantity']) {
+                $this->db->rollBack();
+                throw new \Exception("Product quantity");
+            }
+
             $discount = $promoRepo->getTheBiggestPromotion($userId, $product['id'], $product['category_id']);
 
-            $price += ($product['price'] / $discount * 100);
+            $price += $product['price'] * $product['quantity'] - ($product['price'] * $product['quantity'] * $discount / 100);
+
+            $statement = $this->db->prepare("
+                UPDATE products
+                SET quantity = quantity - ?
+                WHERE id = ?
+            ");
+
+            $statement->execute([
+                $product['quantity'],
+                $product['id']
+            ]);
         }
 
         $statement = $this->db->prepare("
@@ -94,6 +110,46 @@ class CartsRepository implements IRepository
         if($price > $userCash) {
             $this->db->rollBack();
             return false;
+        }
+
+        $statement = $this->db->prepare("
+            UPDATE users
+            SET cash = cash - ?
+            WHERE id = ?
+        ");
+
+        $statement->execute([$price, $userId]);
+
+        if($statement->rowCount() <= 0) {
+            $this->db->rollBack();
+            return false;
+        }
+
+        $statement = $this->db->prepare("
+            DELETE FROM cart_products
+            WHERE cart_id = ?
+        ");
+
+        $statement->execute([$cartId]);
+
+        if($statement->rowCount() < 0) {
+            $this->db->rollBack();
+            return false;
+        }
+
+
+        foreach($products as $product) {
+            $statement = $this->db->prepare("
+                INSERT INTO user_products (user_id, product_id, quantity)
+                VALUES (?, ?, ?)
+            ");
+
+            $statement->execute([$userId, $product['id'], $product['quantity']]);
+
+            if($statement->rowCount() < 0) {
+                $this->db->rollBack();
+                return false;
+            }
         }
 
         $this->db->commit();

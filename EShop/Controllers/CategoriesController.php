@@ -8,6 +8,7 @@ use DF\BindingModels\Category\DeleteCategoryBindingModel;
 use DF\Core\View;
 use DF\Services\EShopData;
 use DF\Services\RouteService;
+use DF\ViewModels\CategoryViewModel;
 
 class CategoriesController extends BaseController
 {
@@ -51,7 +52,7 @@ class CategoriesController extends BaseController
         $isDeleted = $this->eshopData->getCategoriesRepository()->remove($model->getCategoryId());
 
         if($isDeleted) {
-            RouteService::redirect('categories', 'all', true);
+            RouteService::redirect('categories', '', true);
         }else {
             echo 'Error during delete category';
         }
@@ -61,10 +62,12 @@ class CategoriesController extends BaseController
      * @Route("{categoryId:num}/products")
      */
     public function getProducts($categoryId) {
-        $categories = $this->eshopData->getCategoriesRepository()->findById($categoryId);
+        $products = $this->eshopData->getCategoriesRepository()->findById($categoryId);
 
-        var_dump($categories);
+        $viewModel = new CategoryViewModel();
 
-        //return new View('category/products', $viewModel);
+        $viewModel->products = $products;
+
+        return new View('category/products', $viewModel);
     }
 }

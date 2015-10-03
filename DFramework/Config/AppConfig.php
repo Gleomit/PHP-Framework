@@ -25,5 +25,5 @@ class AppConfig
         'All Products' => '1',
         'Certain Products' => '2',
         'Certain Categories' => '3',
-        'User criteria' => '4');
+        'User Criteria' => '4');
 }

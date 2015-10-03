@@ -86,6 +86,26 @@ class ProductsRepository implements IRepository
         return false;
     }
 
+    public function changeQuantity($id, $quantity) {
+        if($quantity < 0) {
+            throw new \Exception("Cannot set negative quantity");
+        }
+
+        $statement = $this->db->prepare("
+            UPDATE products
+            SET quantity = ?
+            WHERE id = ?
+        ");
+
+        $statement->execute([$quantity, $id]);
+
+        if($statement->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function addToCart($userId, $productId) {
         $statement = $this->db->prepare("
             SELECT id from usercart WHERE user_id = ?
@@ -100,11 +120,11 @@ class ProductsRepository implements IRepository
         $cartId = $statement->fetch();
 
         $statement = $this->db->prepare("
-            INSERT INTO cart_products (cart_id, product_id)
-            VALUES (?, ?)
+            INSERT INTO cart_products (cart_id, product_id, quantity)
+            VALUES (?, ?, 1)
         ");
 
-        $statement->execute([$cartId, $productId]);
+        $statement->execute([$cartId['id'], $productId]);
 
         if($statement->rowCount() <= 0) {
             return false;

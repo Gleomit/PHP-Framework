@@ -158,4 +158,14 @@ class UsersRepository implements IRepository
 
         return $products;
     }
+
+    public function getUserCartId($userId) {
+        $statement = $this->db->prepare("
+            SELECT id FROM usercart WHERE user_id = ?
+        ");
+
+        $statement->execute([$userId]);
+
+        return $statement->fetch();
+    }
 }

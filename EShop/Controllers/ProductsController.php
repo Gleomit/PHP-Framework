@@ -3,8 +3,12 @@
 namespace DF\Controllers;
 
 
+use DF\BindingModels\Product\AddToCartBindingModel;
 use DF\BindingModels\Product\ChangeProductCategoryBindingModel;
+use DF\BindingModels\Product\ChangeProductQuantityBindingModel;
 use DF\BindingModels\Product\CreateProductBindingModel;
+use DF\Core\View;
+use DF\Helpers\Session;
 use DF\Services\EShopData;
 use DF\Services\RouteService;
 
@@ -51,16 +55,40 @@ class ProductsController extends BaseController
      * @POST
      */
     public function addToCard($id) {
+        $result = $this->eshopData->getProductsRepository()->addToCart(Session::get('userId'), $id);
 
     }
 
     /**
-     * @PUT
+     * @Authorize
+     * @Route("{id:num}/add")
+     * @POST
+     */
+    public function removeFromCard($id) {
+        $result = $this->eshopData->getProductsRepository()->addToCart(Session::get('userId'), $id);
+    }
+
+    /**
+     * @POST
      * @Roles(Administrator, Editor)
      * @Route("{id:num}/quantity")
      */
-    public function changeQuantity($id) {
+    public function changeQuantity($id, ChangeProductQuantityBindingModel $model) {
+        $result = $this->eshopData->getProductsRepository()->changeQuantity($id, $model->getQuantity());
 
+
+    }
+
+    /**
+     * @param $id
+     * @Route("{id:num}")
+     */
+    public function viewProduct($id) {
+        $product = $this->eshopData->getProductsRepository()->findById($id);
+
+
+
+        return new View('product/productDetails', []);
     }
 
     /**

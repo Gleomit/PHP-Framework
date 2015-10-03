@@ -10,17 +10,15 @@ class Product extends BaseModel
     private $_categoryId;
     private $_quantity;
     private $_price;
-    private $_isSold;
     private $_categoryName;
 
     public function __construct($data) {
         $this->setId($data['id']);
-        $this->setName($data['productName']);
+        $this->setName($data['name']);
         $this->setCategoryId($data['category_id']);
-        $this->setCategoryName($data['categoryName']);
+//        $this->setCategoryName($data['categoryName']);
         $this->setQuantity($data['quantity']);
         $this->setPrice($data['price']);
-        $this->setIsSold($data['is_sold']);
     }
 
     public function getCategoryName() {
@@ -69,13 +67,5 @@ class Product extends BaseModel
 
     public function setPrice($price) {
         $this->_price = $price;
-    }
-
-    public function getIsSold() {
-        return $this->_isSold;
-    }
-
-    public function setIsSold($isSold) {
-        $this->_isSold = $isSold;
     }
 }

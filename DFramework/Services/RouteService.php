@@ -4,7 +4,7 @@ namespace DF\Services;
 
 class RouteService
 {
-    private static $basePath;
+    public static $basePath;
 
     public static function init($basePath) {
         self::$basePath = $basePath;

@@ -4,7 +4,9 @@ namespace DF\Services;
 
 use DF\Repositories\CartsRepository;
 use DF\Repositories\CategoriesRepository;
+use DF\Repositories\CommentsRepository;
 use DF\Repositories\ProductsRepository;
+use DF\Repositories\PromotionsRepository;
 use DF\Repositories\UsersRepository;
 
 class EShopData
@@ -29,11 +31,39 @@ class EShopData
      */
     private $_cartsRepository;
 
+    /**
+     * @var PromotionsRepository
+     */
+    private $_promotionsRepository;
+
+    /**
+     * @var CommentsRepository
+     */
+    private $_commentsRepository;
+
     public function __construct() {
         $this->_productsRepository = new ProductsRepository();
         $this->_categoriesRepository = new CategoriesRepository();
         $this->_usersRepository = new UsersRepository();
         $this->_cartsRepository = new CartsRepository();
+        $this->_promotionsRepository = new PromotionsRepository();
+        $this->_commentsRepository = new CommentsRepository();
+    }
+
+    /**
+     * @return CommentsRepository
+     */
+    public function getCommentsRepository()
+    {
+        return $this->_commentsRepository;
+    }
+
+    /**
+     * @return PromotionsRepository
+     */
+    public function getPromotionsRepository()
+    {
+        return $this->_promotionsRepository;
     }
 
     /**

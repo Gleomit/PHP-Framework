@@ -31,7 +31,7 @@ class PromotionsRepository implements IRepository
     public function getBiggestGlobalPromotion() {
         $statement = $this->db->prepare("
             SELECT id, start_date, end_date, promotion_type, MAX(discount) AS discount FROM promotions
-            WHERE promotion_type = ? AND end_date > NOW()
+            WHERE promotion_type = ? AND end_date > NOW() AND NOW() > start_date
         ");
 
         $statement->execute([AppConfig::$PROMOTION_TYPES['All Products']]);
@@ -49,12 +49,12 @@ class PromotionsRepository implements IRepository
         $statement = $this->db->prepare("
             SELECT p.id, p.start_date, p.end_date, p.promotion_type, MAX(p.discount) AS discount FROM promotions AS p
             INNER JOIN category_promotions AS cp ON cp.promotion_id = p.id
-            WHERE cp.category_id = ? AND p.promotion_type = ? AND p.end_date > NOW()
+            WHERE cp.category_id = ? AND p.promotion_type = ? AND p.end_date > NOW() AND NOW() > p.start_date
         ");
 
         $statement->execute([
             $categoryId,
-            AppConfig::$PROMOTION_TYPES['All Products']
+            AppConfig::$PROMOTION_TYPES['Certain Categories']
         ]);
 
         $result = null;
@@ -69,13 +69,13 @@ class PromotionsRepository implements IRepository
     public function getProductPromotion($productId) {
         $statement = $this->db->prepare("
             SELECT p.id, p.start_date, p.end_date, p.promotion_type, MAX(p.discount) AS discount FROM promotions AS p
-            INNER JOIN product_promotions AS pp ON pp.promotion_id = p.id
-            WHERE pp.product_id = ? AND p.promotion_type = ? AND p.end_date > NOW()
+            INNER JOIN products_promotions AS pp ON pp.promotion_id = p.id
+            WHERE pp.product_id = ? AND p.promotion_type = ? AND p.end_date > NOW() AND NOW() > p.start_date
         ");
 
         $statement->execute([
             $productId,
-            AppConfig::$PROMOTION_TYPES['All Products']
+            AppConfig::$PROMOTION_TYPES['Certain Products']
         ]);
 
         $result = null;
@@ -99,12 +99,12 @@ class PromotionsRepository implements IRepository
         $statement = $this->db->prepare("
             SELECT p.id, p.start_date, p.end_date, p.promotion_type, MAX(p.discount) AS discount FROM promotions AS p
             INNER JOIN user_criteria_promotions AS ucp ON ucp.promotion_id = p.id
-            WHERE ucp.min_cash <= ? AND p.promotion_type = ? AND p.end_date > NOW()
+            WHERE ucp.min_cash <= ? AND p.promotion_type = ? AND p.end_date > NOW() AND NOW() > p.start_date
         ");
 
         $statement->execute([
             $data['cash'],
-            AppConfig::$PROMOTION_TYPES['All Products']
+            AppConfig::$PROMOTION_TYPES['User Criteria']
         ]);
 
         $result = null;
@@ -118,7 +118,7 @@ class PromotionsRepository implements IRepository
 
     public function getTheBiggestPromotion($userId = null, $productId = null, $categoryId = null) {
         $discount = 0;
-        
+
         $globalPromotion = $this->getBiggestGlobalPromotion();
         $categoryPromotion = $this->getCategoryPromotion($categoryId);
         $productPromotion = $this->getProductPromotion($productId);

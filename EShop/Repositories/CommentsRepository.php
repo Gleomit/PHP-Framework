@@ -28,7 +28,7 @@ class CommentsRepository implements IRepository
             $result = $statement->fetch();
         }
 
-        return result;
+        return $result;
     }
 
     public function remove($id)

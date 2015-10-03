@@ -3,10 +3,8 @@
 namespace DF\Controllers;
 
 
-use DF\App;
 use DF\BindingModels\User\LoginBindingModel;
 use DF\BindingModels\User\RegisterBindingModel;
-use DF\Config\AppConfig;
 use DF\Core\View;
 use DF\Helpers\Session;
 use DF\Services\EShopData;
@@ -29,6 +27,10 @@ class AccountController extends BaseController
      * @Authorize
      */
     public function profile() {
+        echo $this->eshopData->getPromotionsRepository()->getTheBiggestPromotion(
+            Session::get('userId'), 1, 2
+        );
+
         return new View('user/profile', []);
     }
 
@@ -69,7 +71,9 @@ class AccountController extends BaseController
      * @Route("cart/checkout")
      */
     public function checkoutCart() {
-
+        $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'));
+        $this->eshopData->getCartsRepository()->checkoutCart(Session::get('userId'), $cartId['id']);
+        echo 'haha';
     }
 
     /**
