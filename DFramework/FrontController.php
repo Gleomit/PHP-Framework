@@ -3,6 +3,8 @@
 namespace DF;
 
 use DF\Config\AppConfig;
+use DF\Config\DatabaseConfig;
+use DF\Core\Database;
 use DF\Core\Request;
 use DF\Core\View;
 use DF\Helpers\Csrf;
@@ -78,6 +80,7 @@ class FrontController {
     }
 
     private function invokeTheRoute(){
+        $this->isBannedByIP();
         $this->checkRequestMethod();
         $this->checkAuthorization();
         $this->checkActionSignature();
@@ -90,6 +93,23 @@ class FrontController {
 
         if(Request::needToChangeCsrf()) {
             Csrf::setCSRFToken();
+        }
+    }
+
+    private function isBannedByIP() {
+        $db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
+
+        $statement = $db->prepare("
+            SELECT ip_address FROM blacklist
+        ");
+
+        $statement->execute();
+
+        $blacklist = $statement->fetchAll();
+
+        if(in_array($_SERVER['REMOTE_ADDR'], $blacklist)) {
+            header("location: http://www.google.com/");
+            exit();
         }
     }
 
@@ -131,16 +151,19 @@ class FrontController {
             foreach($this->getRouter()->routeInfo['bindingModels'] as $bindingModelName) {
                 $refClass = new \ReflectionClass($bindingModelName);
 
-                $bindingModel = new $bindingModelName();
+                $bindingModel = new $bindingModelName(null);
 
                 foreach($refClass->getProperties() as $property) {
                     $propertyName = $property->getName();
+                    $property->setAccessible(true);
 
-                    if(!in_array($propertyName, $requestParamsKeys)) {
+                    if(!$property->isDefault() && !in_array($propertyName, $requestParamsKeys)) {
                         throw new \Exception("Binding model does not have property with name: $propertyName");
                     }
 
-                    $bindingModel->$propertyName = $requestParameters[$propertyName];
+                    if(!$property->isProtected()) {
+                        $property->setValue($bindingModel, $requestParameters[$propertyName]);
+                    }
 
                     unset($requestParameters[$propertyName]);
                     unset($requestParamsKeys[array_search($propertyName, $requestParamsKeys)]);

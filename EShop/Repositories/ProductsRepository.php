@@ -17,17 +17,28 @@ class ProductsRepository implements IRepository
     }
 
     public function create(CreateProductBindingModel $model) {
-        $isCreated = $this->db->insertEntity(self::TABLE_NAME, array(
-            'name' =>$model->getProductName(),
-            'category_id' =>$model->getCategoryId(),
-            'quantity' =>$model->getQuantity(),
-            'price' =>$model->getProductPrice()
-        ));
+        $statement = $this->db->prepare("
+            INSERT INTO products (name, category_id, quantity, price)
+            VALUES (?, ?, ?, ?)
+        ");
 
-        return $isCreated;
+        $data = [
+            $model->getProductName(),
+            $model->getCategoryId(),
+            $model->getQuantity(),
+            $model->getProductPrice()
+        ];
+
+        if(!$statement->execute($data)) {
+            echo $statement->errorInfo();
+            return false;
+        }
+
+        return true;
     }
 
     public function remove($id) {
+
     }
 
     public function findById($id) {

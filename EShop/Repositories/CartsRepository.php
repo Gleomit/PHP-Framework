@@ -18,14 +18,6 @@ class CartsRepository implements IRepository
         $this->db = \DF\Core\Database::getInstance(DatabaseConfig::DB_INSTANCE);
     }
 
-    public function create($userId) {
-        $isCreated = $this->db->insertEntity(self::TABLE_NAME, array(
-            'user_id' => $userId
-        ));
-
-        return $isCreated;
-    }
-
     public function remove($id) {
     }
 
@@ -61,7 +53,7 @@ class CartsRepository implements IRepository
     }
 
     public function getProductsInCart($cartId) {
-        $statement = $this->prepare("
+        $statement = $this->db->prepare("
             SELECT
 	            p.id, p.name, p.price
             FROM cart_products cp

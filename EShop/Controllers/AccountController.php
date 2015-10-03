@@ -3,6 +3,7 @@
 namespace DF\Controllers;
 
 
+use DF\App;
 use DF\BindingModels\User\LoginBindingModel;
 use DF\BindingModels\User\RegisterBindingModel;
 use DF\Config\AppConfig;
@@ -20,32 +21,27 @@ class AccountController extends BaseController
     const DEFAULT_USER_CASH = 500.00;
 
     public function __construct() {
-        $this->_eshopData = new EShopData();
+        $this->eshopData = new EShopData();
     }
 
+    /**
+     * @Authorize
+     */
     public function profile() {
-        if(!$this->isLogged()) {
-            RouteService::redirect('home', 'login', true);
-        }
-
-        $currentUser = $this->_eshopData->getUsersRepository()->findById($this->getCurrentUserId());
-
-        if($currentUser != null) {
-            $viewModel = new ProfileViewModel();
-            $viewModel->userViewModel = $currentUser;
-//            $viewModel->userViewModel->setRoleName(AppUserRolesConfig::getUserRoleName($currentUser->getRole()));
-
-            $viewModel->render();
-        }
+        echo 'logged in';
     }
 
+    /**
+     * @param RegisterBindingModel $model
+     * @throws \Exception
+     * @POST
+     */
     public function register(RegisterBindingModel $model) {
         $model->setCash(self::DEFAULT_USER_CASH);
-        $model->setRole(AppConfig::DEFAULT_USER_ROLE);
 
         $registerResult = $this->eshopData->getUsersRepository()->create($model);
 
-        if($registerResult != false) {
+        if($registerResult) {
             $data = [
                 "username" => $model->getUsername(),
                 "password" => $model->getPassword()
@@ -58,18 +54,22 @@ class AccountController extends BaseController
         throw new \Exception("Registration error");
     }
 
+    /**
+     * @param LoginBindingModel $model
+     * @throws \Exception
+     * @POST
+     */
     public function login(LoginBindingModel $model) {
         $username = $model->getUsername();
         $password = $model->getPassword();
 
         $user = $this->eshopData->getUsersRepository()->findByUsername($username);
 
-        if($user == null || !password_verify($password, $user->getPassword())){
+        if($user === false || !password_verify($password, $user->getPassword())){
             throw new \Exception('Invalid credentials');
         }
 
         Session::put('userId', $user->getId());
-        Session::put('role', $user->getRole()); //Not finished, need to get role name by app config
 
         RouteService::redirect('account', 'profile', true);
     }

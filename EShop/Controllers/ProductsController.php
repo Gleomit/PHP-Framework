@@ -18,6 +18,12 @@ class ProductsController extends BaseController
         $this->eshopData = new EShopData();
     }
 
+    /**
+     * @param CreateProductBindingModel $model
+     * @POST
+     * @Roles(Administrator, Editor)
+     * @Route("")
+     */
     public function addProduct(CreateProductBindingModel $model)
     {
         $isAdded = $this->eshopData->getProductsRepository()->create($model);
@@ -27,5 +33,32 @@ class ProductsController extends BaseController
         }
 
         echo "Unable to add product";
+    }
+
+    /**
+     * @PUT
+     * @Roles(Administrator, Editor)
+     * @Route("{id:num}/quantity")
+     */
+    public function changeQuantity($id) {
+
+    }
+
+    /**
+     * @DELETE
+     * @Roles(Administrator, Editor)
+     * @Route("{id:num}")
+     */
+    public function deleteProduct($id) {
+
+    }
+
+    /**
+     * @PUT
+     * @Roles(Administrator, Editor)
+     * @Route("{id:num}")
+     */
+    public function changeCategory($id) {
+
     }
 }

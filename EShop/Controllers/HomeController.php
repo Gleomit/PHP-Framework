@@ -8,7 +8,7 @@ use DF\Services\RouteService;
 class HomeController extends BaseController
 {
     /**
-     * @return View
+     * @return View)
      */
     public function index() {
         echo 'Blqblq';
@@ -17,8 +17,6 @@ class HomeController extends BaseController
 
     /**
      * @return View
-     * @Route("")
-     * @POST
      */
     public function login() {
         if($this->isLogged()) {

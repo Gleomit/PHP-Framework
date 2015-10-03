@@ -4,87 +4,69 @@ namespace DF\Models;
 
 class User extends BaseModel
 {
-    private $_id;
-    private $_username;
-    private $_password;
-    private $_email;
-    private $_fullName;
-    private $_age;
-    private $_roleId = null;
-    private $_cash = null;
+    private $id;
+    private $username;
+    private $password;
+    private $email;
+    private $roles = [];
+    private $cash = null;
 
     public function __construct($data) {
         $this->setId($data['id']);
         $this->setUsername($data['username']);
-        $this->setPassword($data['password']);
+        $this->setPassword($data['password_hash']);
         $this->setEmail($data['email']);
-        $this->setFullName($data['full_name']);
-        $this->setRole($data['role_id']);
-        $this->setAge($data['age']);
+//        $this->setFullName($data['full_name']);
+        $this->setRoles($data['roles']);
+//        $this->setAge($data['age']);
         $this->setCash($data['cash']);
     }
 
     public function getId() {
-        return $this->_id;
+        return $this->id;
     }
 
     public function setId($id) {
-        $this->_id = $id;
-    }
-
-    public function getFullName() {
-        return $this->_fullName;
-    }
-
-    public function setFullName($fullName) {
-        $this->_fullName = $fullName;
-    }
-
-    public function getAge() {
-        return $this->_age;
-    }
-
-    public function setAge($age) {
-        $this->_age = $age;
+        $this->id = $id;
     }
 
     public function getUsername() {
-        return $this->_username;
+        return $this->username;
     }
 
     public function setUsername($value) {
-        $this->_username = $value;
+        $this->username = $value;
     }
 
     public function getPassword() {
-        return $this->_password;
+        return $this->password;
     }
 
     public function setPassword($value) {
-        $this->_password = $value;
+        $this->password = $value;
     }
 
     public function getEmail() {
-        return $this->_email;
+        return $this->email;
     }
 
     public function setEmail($value) {
-        $this->_email = $value;
+        $this->email = $value;
     }
 
-    public function getRole() {
-        return $this->_roleId;
+    public function getRoles() {
+        return $this->roles;
     }
 
-    public function setRole($value) {
-        $this->_roleId = $value;
+    public function setRoles($value) {
+        $this->roles = $value;
     }
 
     public function getCash() {
-        return $this->_cash;
+        return $this->cash;
     }
 
     public function setCash($value) {
-        $this->_cash = $value;
+        $this->cash = $value;
     }
 }

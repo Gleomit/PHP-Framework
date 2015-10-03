@@ -6,10 +6,9 @@
         ->initPasswordField()
         ->setName('password')
         ->create()
-        ->initPasswordField()
-        ->setName('confirmPassword')
-        ->create()
         ->initSubmitButton()
-        ->setValue('Register')
+        ->setValue('Login')
         ->create()
+        ->setAction(\DF\Services\RouteService::getUrl('account', 'login'))
+        ->setMethod('POST')
         ->render();

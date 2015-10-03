@@ -6,66 +6,58 @@ use DF\BindingModels\IBindingModel;
 
 class RegisterBindingModel implements IBindingModel
 {
-    private $_username;
-    private $_password;
-    private $_confirmPassword;
-    private $_email;
-    protected $_role = null;
-    protected $_cash = null;
+    private $username;
+    private $password;
+    private $confirmPassword;
+    private $email;
+    protected $cash = null;
 
     public function __construct($bindingData) {
-        $this->setUsername($bindingData['username']);
-        $this->setPassword($bindingData['password']);
-        $this->setConfirmPassword($bindingData['confirmPassword']);
-        $this->setEmail($bindingData['email']);
-        $this->setRole($bindingData['role']);
-    }
-
-    public function getRole() {
-        return $this->_role;
-    }
-
-    public function setRole($role) {
-        $this->_role = $role;
+        if(isset($bindingData)) {
+            $this->setUsername($bindingData['username']);
+            $this->setPassword($bindingData['password']);
+            $this->setConfirmPassword($bindingData['confirmPassword']);
+            $this->setEmail($bindingData['email']);
+        }
     }
 
     public function getConfirmPassword() {
-        return $this->_confirmPassword;
+        return $this->confirmPassword;
     }
 
     public function setConfirmPassword($confirmPassword) {
-        $this->_confirmPassword = $confirmPassword;
+        $this->confirmPassword = $confirmPassword;
     }
 
     public function getUsername() {
-        return $this->_username;
+        return $this->username;
     }
 
     public function setUsername($value) {
-        $this->_username = $value;
+        $this->username = $value;
     }
 
     public function getPassword() {
-        return $this->_password;
+        return $this->password;
     }
 
     public function setPassword($value) {
-        $this->_password = $value;
+        $this->password = $value;
     }
 
     public function getEmail() {
-        return $this->_email;
+        return $this->email;
     }
 
     public function setEmail($value) {
-        $this->_email = $value;
+        $this->email = $value;
     }
 
     public function getCash() {
-        return $this->_cash;
+        return $this->cash;
     }
 
     public function setCash($value) {
-        $this->_cash = $value;
+        $this->cash = $value;
     }
 }

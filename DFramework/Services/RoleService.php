@@ -9,31 +9,31 @@ use DF\Core\Database;
 class RoleService
 {
     public static function userInRoles($userId, array $roles) {
-        $db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
-
-        //check if roles are valid
-
-        $validRoles = self::getRoles();
+        $userRoles = self::getUserRoles($userId);
 
         foreach($roles as $role) {
-            if(!in_array($role, $validRoles)) {
-                throw new \Exception("Invalid Role used");
+            if(in_array($role, $userRoles)) {
+                return true;
             }
         }
 
+        return false;
+    }
+
+    public static function getUserRoles($userId) {
+        $db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
+
         $result = $db->prepare("
-            SELECT * FROM user_roles AS ur ON ur.user_id = ?
+            SELECT r.name FROM user_roles AS ur
             INNER JOIN roles AS r ON r.id = ur.role_id
-            WHERE r.name IN (?)
+            WHERE ur.user_id = ?
         ");
 
-        $result->execute([$userId, implode(", ", $roles)]);
+        $result->execute([$userId]);
 
-        if($result->rowCount() > 0) {
-            return true;
-        }
+        $data = $result->fetchAll(\PDO::FETCH_COLUMN);
 
-        return false;
+        return $data;
     }
 
     public static function getRoles() {
