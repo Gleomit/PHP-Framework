@@ -9,6 +9,7 @@ use DF\Core\View;
 use DF\Helpers\Session;
 use DF\Services\EShopData;
 use DF\Services\RouteService;
+use DF\ViewModels\UserCartViewModel;
 
 class AccountController extends BaseController
 {
@@ -36,10 +37,52 @@ class AccountController extends BaseController
 
     /**
      * @Authorize
+     * @Route("cart/product/{productId:num}/remove")
+     */
+    public function removeProductFromCart($productId) {
+        $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'))['id'];
+        $result = $this->eshopData->getCartsRepository()->removeProduct($productId, $cartId);
+
+        RouteService::redirect('account', 'cart');
+    }
+
+    /**
+     * @Authorize
+     * @Route("cart/product/{productId:num}/increase")
+     */
+    public function increaseProductQuantityInCart($productId) {
+        $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'))['id'];
+        $result = $this->eshopData->getProductsRepository()->increaseQuantityInCart($productId, $cartId);
+
+        RouteService::redirect('account', 'cart');
+    }
+
+    /**
+     * @Authorize
+     * @Route("cart/product/{productId:num}/decrease")
+     */
+    public function decreaseProductQuantityInCart($productId) {
+        $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'))['id'];
+        $result = $this->eshopData->getProductsRepository()->decreaseQuantityInCart($productId, $cartId);
+
+        RouteService::redirect('account', 'cart');
+    }
+
+    /**
+     * @Authorize
      */
     public function cart() {
+        $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'))['id'];
+        $products = $this->eshopData->getCartsRepository()->getProductsInCart($cartId);
 
-        return new View('user/cart', []);
+        $viewModel = new UserCartViewModel();
+        $viewModel->products = $products;
+
+        foreach($viewModel->products as $product) {
+            $viewModel->totalSum += $product['price'] * $product['quantity'];
+        }
+
+        return new View('user/cart', $viewModel);
     }
 
     /**
@@ -92,6 +135,7 @@ class AccountController extends BaseController
         }
 
         Session::put('userId', $user->getId());
+//        Session::put('roles')
 
         RouteService::redirect('account', 'profile', true);
     }
@@ -102,7 +146,7 @@ class AccountController extends BaseController
     public function logout() {
         if($this->isLogged()) {
             Session::emptyUserRelated();
-            RouteService::redirect('home', 'index', true);
+            RouteService::redirect('home', '', true);
         }
     }
 }

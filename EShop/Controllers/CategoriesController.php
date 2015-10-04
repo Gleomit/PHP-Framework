@@ -8,6 +8,7 @@ use DF\BindingModels\Category\DeleteCategoryBindingModel;
 use DF\Core\View;
 use DF\Services\EShopData;
 use DF\Services\RouteService;
+use DF\ViewModels\CategoriesViewModel;
 use DF\ViewModels\CategoryViewModel;
 
 class CategoriesController extends BaseController
@@ -21,12 +22,36 @@ class CategoriesController extends BaseController
         $this->eshopData = new EShopData();
     }
 
-    public function all() {
-        $categories = $this->eshopData->getCategoriesRepository()->all();
-        $viewModel = new CategoryViewModel();
-        $viewModel->categoryViewModel = $categories;
+    /**
+     * @return View
+     * @Route("")
+     */
+    public function categories() {
+        $categories = $this->eshopData->getCategoriesRepository()->getCategories();
+        $products = $this->eshopData->getProductsRepository()->getAllProducts();
 
-        return new View("categories/all", $viewModel);
+        $viewModel = new CategoriesViewModel();
+
+        $viewModel->categories = $categories;
+        $viewModel->products = $products;
+
+        return new View("category/categories", $viewModel);
+    }
+
+    /**
+     * @return View
+     * @Route("{id:num}")
+     */
+    public function viewCategory($id) {
+        $categories = $this->eshopData->getCategoriesRepository()->getCategories();
+        $products = $this->eshopData->getCategoriesRepository()->getProducts($id);
+
+        $viewModel = new CategoriesViewModel();
+
+        $viewModel->categories = $categories;
+        $viewModel->products = $products;
+
+        return new View("category/categories", $viewModel);
     }
 
     /**

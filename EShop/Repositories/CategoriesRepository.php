@@ -6,6 +6,7 @@ namespace DF\Repositories;
 use DF\BindingModels\Category\CreateCategoryBindingModel;
 use DF\BindingModels\Category\UpdateCategoryBindingModel;
 use DF\Config\DatabaseConfig;
+use DF\Helpers\Session;
 use DF\Models\Category;
 
 class CategoriesRepository implements IRepository
@@ -76,11 +77,7 @@ class CategoriesRepository implements IRepository
         $statement->execute();
 
         $data = $statement->fetchAll();
-        $categories = [];
-
-        foreach ($data as $category) {
-            $categories[] = new Category($category);
-        }
+        $categories = $data;
 
         return $categories;
     }
@@ -100,5 +97,27 @@ class CategoriesRepository implements IRepository
         }
 
         return $category;
+    }
+
+    public function getProducts($categoryId) {
+        $statement = $this->db->prepare("
+            SELECT * FROM products WHERE category_id = ?
+        ");
+
+        $statement->execute([$categoryId]);
+
+        $products = $statement->fetchAll();
+
+        $promoRepo = new PromotionsRepository();
+
+        for($i = 0; $i < count($products); $i++) {
+            $discount = $promoRepo->getTheBiggestPromotion(Session::get('userId'), $products[$i]['id'], $products[$i]['category_id']);
+
+            $products[$i]['original_price'] = $products[$i]['price'];
+            $products[$i]['price'] = $products[$i]['price'] - ($products[$i]['price'] * $discount / 100);
+            $products[$i]['discount'] = $discount;
+        }
+
+        return $products;
     }
 }

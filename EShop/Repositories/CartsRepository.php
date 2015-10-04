@@ -4,6 +4,7 @@ namespace DF\Repositories;
 
 
 use DF\Config\DatabaseConfig;
+use DF\Helpers\Session;
 use DF\Models\Cart;
 
 class CartsRepository implements IRepository
@@ -65,7 +66,32 @@ class CartsRepository implements IRepository
             $products = $statement->fetchAll();
         }
 
+        $promoRepo = new PromotionsRepository();
+
+        for($i = 0; $i < count($products); $i++) {
+            $discount = $promoRepo->getTheBiggestPromotion(Session::get('userId'), $products[$i]['id'], $products[$i]['category_id']);
+
+            $products[$i]['original_price'] = $products[$i]['price'];
+            $products[$i]['price'] = $products[$i]['price'] - ($products[$i]['price'] * $discount / 100);
+            $products[$i]['discount'] = $discount;
+        }
+
         return $products;
+    }
+
+    public function removeProduct($productId, $cartId) {
+        $statement = $this->db->prepare("
+            DELETE FROM cart_products
+            WHERE cart_id = ? AND product_id = ?
+        ");
+
+        $statement->execute([$cartId, $productId]);
+
+        if($statement->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
     }
 
     public function checkoutCart($userId, $cartId) {

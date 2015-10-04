@@ -22,7 +22,7 @@ class HomeController extends BaseController
             RouteService::redirect('account', 'profile', true);
         }
 
-        return new View("user\\login",[]);
+        return new View("user\\login", []);
     }
 
     public function register() {
@@ -30,7 +30,7 @@ class HomeController extends BaseController
             RouteService::redirect('account', 'profile', true);
         }
 
-        return new View("user\\register",[]);
+        return new View("user\\register", []);
     }
 
     /**

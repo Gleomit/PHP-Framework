@@ -52,20 +52,11 @@ class ProductsController extends BaseController
     /**
      * @Authorize
      * @Route("{id:num}/add")
-     * @POST
      */
-    public function addToCard($id) {
+    public function addToCart($id) {
         $result = $this->eshopData->getProductsRepository()->addToCart(Session::get('userId'), $id);
 
-    }
-
-    /**
-     * @Authorize
-     * @Route("{id:num}/add")
-     * @POST
-     */
-    public function removeFromCard($id) {
-        $result = $this->eshopData->getProductsRepository()->addToCart(Session::get('userId'), $id);
+        RouteService::redirect('categories', '');
     }
 
     /**
@@ -75,8 +66,6 @@ class ProductsController extends BaseController
      */
     public function changeQuantity($id, ChangeProductQuantityBindingModel $model) {
         $result = $this->eshopData->getProductsRepository()->changeQuantity($id, $model->getQuantity());
-
-
     }
 
     /**
@@ -85,8 +74,6 @@ class ProductsController extends BaseController
      */
     public function viewProduct($id) {
         $product = $this->eshopData->getProductsRepository()->findById($id);
-
-
 
         return new View('product/productDetails', []);
     }

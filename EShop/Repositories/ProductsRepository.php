@@ -6,6 +6,7 @@ namespace DF\Repositories;
 use DF\BindingModels\Comment\CreateCommentBindingModel;
 use DF\BindingModels\Product\CreateProductBindingModel;
 use DF\Config\DatabaseConfig;
+use DF\Helpers\Session;
 use DF\Models\Product;
 
 class ProductsRepository implements IRepository
@@ -86,6 +87,28 @@ class ProductsRepository implements IRepository
         return false;
     }
 
+    public function getAllProducts() {
+        $statement = $this->db->prepare("
+            SELECT * FROM products
+        ");
+
+        $statement->execute();
+
+        $products = $statement->fetchAll();
+
+        $promoRepo = new PromotionsRepository();
+
+        for($i = 0; $i < count($products); $i++) {
+            $discount = $promoRepo->getTheBiggestPromotion(Session::get('userId'), $products[$i]['id'], $products[$i]['category_id']);
+
+            $products[$i]['original_price'] = $products[$i]['price'];
+            $products[$i]['price'] = $products[$i]['price'] - ($products[$i]['price'] * $discount / 100);
+            $products[$i]['discount'] = $discount;
+        }
+
+        return $products;
+    }
+
     public function changeQuantity($id, $quantity) {
         if($quantity < 0) {
             throw new \Exception("Cannot set negative quantity");
@@ -106,6 +129,40 @@ class ProductsRepository implements IRepository
         return false;
     }
 
+    public function increaseQuantityInCart($productId, $cartId) {
+        $statement = $this->db->prepare("
+            UPDATE cart_products
+            SET quantity = quantity + 1
+            WHERE product_id = ? AND cart_id = ?
+        ");
+
+        $statement->execute([$productId, $cartId]);
+
+
+        if($statement->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function decreaseQuantityInCart($productId, $cartId) {
+        $statement = $this->db->prepare("
+            UPDATE cart_products
+            SET quantity = quantity - 1
+            WHERE product_id = ? AND cart_id = ? AND quantity > 0
+        ");
+
+        $statement->execute([$productId, $cartId]);
+
+
+        if($statement->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function addToCart($userId, $productId) {
         $statement = $this->db->prepare("
             SELECT id from usercart WHERE user_id = ?
@@ -118,6 +175,16 @@ class ProductsRepository implements IRepository
         }
 
         $cartId = $statement->fetch();
+
+        $statement = $this->db->prepare("
+            SELECT product_id FROM cart_products WHERE product_id = ?
+        ");
+
+        $statement->execute([$productId]);
+
+        if($statement->rowCount() > 0) {
+            return false;
+        }
 
         $statement = $this->db->prepare("
             INSERT INTO cart_products (cart_id, product_id, quantity)

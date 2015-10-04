@@ -3,8 +3,8 @@
 namespace DF\ViewModels;
 
 
-class UserCartViewModel
+class CategoriesViewModel
 {
-    public $totalSum = 0;
     public $products = [];
+    public $categories = [];
 }
