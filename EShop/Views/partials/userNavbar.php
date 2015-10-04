@@ -9,6 +9,7 @@
                     <ul class="nav navbar-nav">
                         <li><a href="#"><i class="fa fa-user"></i> Account</a></li>
                         <li><a href="<?= \DF\Services\RouteService::getUrl('account', 'cart'); ?>"><i class="fa fa-shopping-cart"></i> Cart</a></li>
+                        <li><a href="<?= \DF\Services\RouteService::getUrl('account', 'products'); ?>"><i class="fa fa-shopping-cart"></i> My products</a></li>
                         <li><a href="<?= \DF\Services\RouteService::getUrl('account', 'logout'); ?>"><i class="fa fa-lock"></i> Logout</a></li>
                     </ul>
                 </div>

@@ -19,6 +19,10 @@ class CategoriesRepository implements IRepository
     }
 
     public function create(CreateCategoryBindingModel $model) {
+        if($this->categoryExists($model->getName())) {
+            return false;
+        }
+
         $statement = $this->db->prepare("
             INSERT INTO categories (name)
             VALUES (?)
@@ -119,5 +123,19 @@ class CategoriesRepository implements IRepository
         }
 
         return $products;
+    }
+
+    public function categoryExists($name) {
+        $statement = $this->db->prepare("
+            SELECT id FROM categories WHERE name = ?
+        ");
+
+        $statement->execute([$name]);
+
+        if($statement->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
     }
 }

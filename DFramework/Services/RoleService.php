@@ -53,4 +53,22 @@ class RoleService
 
         return array_flip($roles);
     }
+
+    public static function isAdministrator() {
+        if(\DF\Helpers\Session::get('userId') != null &&
+            strpos(\DF\Helpers\Session::get('roles'), 'Administrator') >= 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function isEditor() {
+        if(\DF\Helpers\Session::get('userId') != null &&
+            strpos(\DF\Helpers\Session::get('roles'), 'Editor') >= 0) {
+            return true;
+        }
+
+        return false;
+    }
 }

@@ -13,7 +13,6 @@ abstract class Element
 
     public function setName($value) {
         $this->attributes['name'] = $value;
-
         return $this;
     }
 

@@ -124,6 +124,52 @@ class UsersRepository implements IRepository
         return $user;
     }
 
+    public function userExistsByUsername($username) {
+        $statement = $this->db->prepare("
+            SELECT id FROM users WHERE username = ?
+        ");
+
+        $statement->execute([$username]);
+
+        if($statement->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function banIP($ipAddress) {
+        $statement = $this->db->prepare("
+            INSERT INTO blacklist (ip_address)
+            VALUES (?)
+        ");
+
+        $statement->execute([$ipAddress]);
+
+        if($statement->rowCount() > 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function banByUsername($username) {
+        $statement = $this->db->prepare("
+            UPDATE users
+            SET is_banned = TRUE
+            WHERE username = ?
+        ");
+
+        $statement->execute([$username]);
+
+        if(($statement->rowCount() > 0)) {
+            //Successfull ban
+            return true;
+        }
+
+        return false;
+    }
+
     public function getUserCart($userId) {
         $statement = $this->db->prepare("
             SELECT p.name, p.price FROM usercart AS uc
@@ -140,23 +186,15 @@ class UsersRepository implements IRepository
 
     public function getUserProducts($userId) {
         $statement = $this->db->prepare("
-            SELECT p.name, up.quantity FROM user_products AS up
-            INNER JOIN product AS p ON p.id = up.product_id
-            WHERE up.user_id = ?
+            SELECT * FROM user_products
+            WHERE user_id = ?
         ");
 
         $statement->execute([$userId]);
 
-        $products = [];
-
         $data = $statement->fetchAll();
 
-        foreach ($data as $product) {
-            $userProduct = new UserProduct($product);
-            array_push($products, $userProduct);
-        }
-
-        return $products;
+        return $data;
     }
 
     public function getUserCartId($userId) {

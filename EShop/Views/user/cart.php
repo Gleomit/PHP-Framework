@@ -56,7 +56,7 @@
                     <ul>
                         <li>Total <span><?= $model->totalSum; ?></span></li>
                     </ul>
-                    <a class="btn btn-default check_out" href="<?= \DF\Services\RouteService::$basePath . "account/card/checkout"; ?>">Check Out</a>
+                    <a class="btn btn-default check_out" href="<?= \DF\Services\RouteService::$basePath . "account/cart/checkout"; ?>">Check Out</a>
                 </div>
             </div>
         </div>

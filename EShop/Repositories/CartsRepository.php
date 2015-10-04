@@ -52,7 +52,7 @@ class CartsRepository implements IRepository
     public function getProductsInCart($cartId) {
         $statement = $this->db->prepare("
             SELECT
-	            p.id, p.name, p.price, p.category_id, cp.quantity, p.quantity AS product_max_quantity
+	            p.id, p.name, p.price, p.category_id, cp.quantity, p.quantity AS product_max_quantity, p.details
             FROM cart_products cp
             JOIN products p ON cp.product_id = p.id
             WHERE cp.cart_id = ?;
@@ -166,11 +166,11 @@ class CartsRepository implements IRepository
 
         foreach($products as $product) {
             $statement = $this->db->prepare("
-                INSERT INTO user_products (user_id, product_id, quantity)
-                VALUES (?, ?, ?)
+                INSERT INTO user_products (user_id, name, quantity, details, price)
+                VALUES (?, ?, ?, ?, ?)
             ");
 
-            $statement->execute([$userId, $product['id'], $product['quantity']]);
+            $statement->execute([$userId, $product['name'], $product['quantity'], $product['details'], $product['price']]);
 
             if($statement->rowCount() < 0) {
                 $this->db->rollBack();

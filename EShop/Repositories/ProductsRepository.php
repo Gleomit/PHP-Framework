@@ -200,6 +200,24 @@ class ProductsRepository implements IRepository
         return true;
     }
 
+    public function getComments($id) {
+        $statement = $this->db->prepare("
+            SELECT c.id, c.comment_data, c.comment_date, u.username FROM comments AS c
+            INNER JOIN users AS u ON u.id = c.user_id
+            WHERE c.product_id = ?
+        ");
+
+        $statement->execute([$id]);
+
+        $comments = [];
+
+        if($statement->rowCount() > 0) {
+            $comments = $statement->fetchAll();
+        }
+
+        return $comments;
+    }
+
     public function findById($id) {
         $statement = $this->db->prepare("
             SELECT * FROM products WHERE id = ?
@@ -209,8 +227,6 @@ class ProductsRepository implements IRepository
 
         $data = $statement->fetch();
 
-        $product = new Product($data);
-
-        return $product;
+        return $data;
     }
 }

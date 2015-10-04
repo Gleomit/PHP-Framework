@@ -47,6 +47,7 @@ class FormViewHelper
             $attributesString = "";
 
             foreach($element->attributes as $attribute => $value) {
+
                 if($attribute != 'value' && $element->innerValue === false) {
                     $attributesString .= " $attribute = " . "\"$value\"";
                 }
@@ -55,7 +56,7 @@ class FormViewHelper
             $result .= $attributesString . ">";
 
             if($element->innerValue === true) {
-                $result .= ($element->attributes['value'] != null ? $element->attributes['value'] : "");
+                $result .= (isset($element->attributes['value']) ? $element->attributes['value'] : "");
                 $result .= "</$element->elementName>";
             }
         }

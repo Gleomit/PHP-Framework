@@ -10,6 +10,7 @@ class User extends BaseModel
     private $email;
     private $roles = [];
     private $cash = null;
+    private $isBanned;
 
     public function __construct($data) {
         $this->setId($data['id']);
@@ -20,6 +21,7 @@ class User extends BaseModel
         $this->setRoles($data['roles']);
 //        $this->setAge($data['age']);
         $this->setCash($data['cash']);
+        $this->setIsBanned($data['is_banned']);
     }
 
     public function getId() {
@@ -36,6 +38,14 @@ class User extends BaseModel
 
     public function setUsername($value) {
         $this->username = $value;
+    }
+
+    public function getIsBanned() {
+        return $this->isBanned;
+    }
+
+    public function setIsBanned($value) {
+        $this->isBanned = $value;
     }
 
     public function getPassword() {

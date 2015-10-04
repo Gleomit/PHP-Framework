@@ -72,9 +72,10 @@ class CategoriesController extends BaseController
 
     /**
      * @Roles(Administrator, Editor)
+     * @Route("{id:num}/delete")
      */
-    public function delete(DeleteCategoryBindingModel $model) {
-        $isDeleted = $this->eshopData->getCategoriesRepository()->remove($model->getCategoryId());
+    public function delete($id) {
+        $isDeleted = $this->eshopData->getCategoriesRepository()->remove($id);
 
         if($isDeleted) {
             RouteService::redirect('categories', '', true);

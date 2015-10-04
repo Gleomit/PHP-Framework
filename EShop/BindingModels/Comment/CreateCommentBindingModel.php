@@ -10,7 +10,7 @@ class CreateCommentBindingModel implements IBindingModel
 
     public function __construct($bindingModel) {
         if(isset($bindingModel)) {
-            $this->setQuantity($bindingModel['commentText']);
+
         }
     }
 

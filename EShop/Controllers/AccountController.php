@@ -8,8 +8,10 @@ use DF\BindingModels\User\RegisterBindingModel;
 use DF\Core\View;
 use DF\Helpers\Session;
 use DF\Services\EShopData;
+use DF\Services\RoleService;
 use DF\Services\RouteService;
 use DF\ViewModels\UserCartViewModel;
+use DF\ViewModels\UserProductsViewModel;
 
 class AccountController extends BaseController
 {
@@ -110,13 +112,24 @@ class AccountController extends BaseController
 
     /**
      * @Authorize
-     * @POST
+     * @Route("products")
+     */
+    public function myProducts() {
+        $viewModel = new UserProductsViewModel();
+
+        $viewModel->products = $this->eshopData->getUsersRepository()->getUserProducts(Session::get('userId'));
+
+        return new View("user/products", $viewModel);
+    }
+
+    /**
+     * @Authorize
      * @Route("cart/checkout")
      */
     public function checkoutCart() {
         $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'));
         $this->eshopData->getCartsRepository()->checkoutCart(Session::get('userId'), $cartId['id']);
-        echo 'haha';
+        RouteService::redirect('home', '', true);
     }
 
     /**
@@ -134,8 +147,12 @@ class AccountController extends BaseController
             throw new \Exception('Invalid credentials');
         }
 
+        if($user->getIsBanned()) {
+            throw new \Exception("This account is banned");
+        }
+
         Session::put('userId', $user->getId());
-//        Session::put('roles')
+        Session::put('roles', implode(', ', RoleService::getUserRoles($user->getId())));
 
         RouteService::redirect('account', 'profile', true);
     }

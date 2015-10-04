@@ -3,7 +3,7 @@
 namespace DF\Controllers;
 
 
-use DF\BindingModels\Product\AddToCartBindingModel;
+use DF\BindingModels\Comment\CreateCommentBindingModel;
 use DF\BindingModels\Product\ChangeProductCategoryBindingModel;
 use DF\BindingModels\Product\ChangeProductQuantityBindingModel;
 use DF\BindingModels\Product\CreateProductBindingModel;
@@ -11,6 +11,7 @@ use DF\Core\View;
 use DF\Helpers\Session;
 use DF\Services\EShopData;
 use DF\Services\RouteService;
+use DF\ViewModels\ProductViewModel;
 
 class ProductsController extends BaseController
 {
@@ -34,7 +35,7 @@ class ProductsController extends BaseController
         $isAdded = $this->eshopData->getProductsRepository()->create($model);
 
         if($isAdded) {
-            RouteService::redirect('categories', 'all', true);
+            RouteService::redirect('categories', '', true);
         }
 
         echo "Unable to add product";
@@ -44,9 +45,13 @@ class ProductsController extends BaseController
      * @param $id
      * @Authorize
      * @Route("{id:num}/comment")
+     * @POST
      */
-    public function commentProduct($id) {
+    public function commentProduct($id, CreateCommentBindingModel $model) {
+        $this->eshopData->getProductsRepository()->addComment(Session::get('userId'), $id, $model);
 
+        header('Location: ' . RouteService::$basePath . '/products/' . $id);
+        exit;
     }
 
     /**
@@ -66,6 +71,8 @@ class ProductsController extends BaseController
      */
     public function changeQuantity($id, ChangeProductQuantityBindingModel $model) {
         $result = $this->eshopData->getProductsRepository()->changeQuantity($id, $model->getQuantity());
+
+        RouteService::redirect('products', '', [$id], true);
     }
 
     /**
@@ -74,8 +81,14 @@ class ProductsController extends BaseController
      */
     public function viewProduct($id) {
         $product = $this->eshopData->getProductsRepository()->findById($id);
+        $comments = $this->eshopData->getProductsRepository()->getComments($id);
 
-        return new View('product/productDetails', []);
+        $viewModel = new ProductViewModel();
+
+        $viewModel->product = $product;
+        $viewModel->comments = $comments;
+
+        return new View('product/productDetails', $viewModel);
     }
 
     /**
@@ -95,10 +108,6 @@ class ProductsController extends BaseController
     public function changeCategory($id, ChangeProductCategoryBindingModel $model) {
         $result = $this->eshopData->getProductsRepository()->changeCategory($id, $model->getCategoryId());
 
-        if($result) {
-            RouteService::redirect('products', '', [$id], true);
-        }
-
-        return false;
+        RouteService::redirect('products', '', [$id], true);
     }
 }
