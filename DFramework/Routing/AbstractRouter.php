@@ -1,7 +1,5 @@
 <?php
-
 namespace DF\Routing;
-
 
 class AbstractRouter
 {
@@ -15,7 +13,8 @@ class AbstractRouter
      * @param Route $route
      * @return \DF\Routing\RouterAbstract static bound
      */
-    public static function addRoute(Route $route) {
+    public static function addRoute(Route $route)
+    {
         self::$routes[] = $route;
 
         return new static;
@@ -23,7 +22,8 @@ class AbstractRouter
     /**
      * @return Route[]
      */
-    public static function getRoutes() {
+    public static function getRoutes()
+    {
         return self::$routes;
     }
 }

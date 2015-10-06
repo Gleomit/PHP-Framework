@@ -1,5 +1,4 @@
 <?php
-
 namespace DF;
 
 use DF\Config\AppConfig;
@@ -13,7 +12,8 @@ use DF\Routing\Router;
 use DF\Services\RoleService;
 use DF\Services\RouteService;
 
-class FrontController {
+class FrontController
+{
     private $controller;
     private $controllerString;
 
@@ -26,11 +26,13 @@ class FrontController {
      */
     private $request;
 
-    public function __construct(Router $router) {
+    public function __construct(Router $router)
+    {
         $this->router = $router;
     }
 
-    public function dispatch() {
+    public function dispatch()
+    {
         if(!isset($_GET['url'])) {
             RouteService::redirect('home', '', [], true);
         }
@@ -46,22 +48,26 @@ class FrontController {
         }
     }
 
-    public function setRouter(Router $router) {
+    public function setRouter(Router $router)
+    {
         $this->router = $router;
     }
 
     /**
      * @return \DF\Routing\Router
      */
-    public function getRouter() {
+    public function getRouter()
+    {
         return $this->router;
     }
 
-    public function getController() {
+    public function getController()
+    {
         return $this->controller;
     }
 
-    private function initController() {
+    private function initController()
+    {
         if (!empty($this->getRouter()->getController())) {
             $classString = AppConfig::FRAMEWORK_NAMESPACE;
 
@@ -80,11 +86,13 @@ class FrontController {
         }
     }
 
-    private function initRequest() {
+    private function initRequest()
+    {
         $this->request = Request::handle();
     }
 
-    private function invokeTheRoute(){
+    private function invokeTheRoute()
+    {
         $this->isBannedByIP();
         $this->checkRequestMethod();
         $this->checkAuthorization();
@@ -101,7 +109,8 @@ class FrontController {
         }
     }
 
-    private function isBannedByIP() {
+    private function isBannedByIP()
+    {
         $db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
 
         $statement = $db->prepare("
@@ -118,13 +127,15 @@ class FrontController {
         }
     }
 
-    private function checkRequestMethod() {
+    private function checkRequestMethod()
+    {
         if($_SERVER['REQUEST_METHOD'] != $this->getRouter()->routeInfo['requestType']) {
             throw new \Exception("Wrong request method.");
         }
     }
 
-    private function checkAuthorization() {
+    private function checkAuthorization()
+    {
         if(!Session::exists('userId') && $this->getRouter()->routeInfo['authorize'] == true) {
             throw new \Exception("Unauthorized");
         }
@@ -136,7 +147,8 @@ class FrontController {
         }
     }
 
-    private function checkActionSignature() {
+    private function checkActionSignature()
+    {
         if(count($this->getRouter()->routeInfo['bindingModels']) > 0) {
             if(count($this->request->getParams()) == 0) {
                 throw new \Exception("Action expecting post/put binding model, request has 0");

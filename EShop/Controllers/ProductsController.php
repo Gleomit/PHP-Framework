@@ -2,7 +2,6 @@
 
 namespace DF\Controllers;
 
-
 use DF\BindingModels\Comment\CreateCommentBindingModel;
 use DF\BindingModels\Product\ChangeProductCategoryBindingModel;
 use DF\BindingModels\Product\ChangeProductQuantityBindingModel;
@@ -20,7 +19,8 @@ class ProductsController extends BaseController
      */
     private $eshopData;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->eshopData = new EShopData();
     }
 
@@ -47,7 +47,8 @@ class ProductsController extends BaseController
      * @Route("{id:num}/comment")
      * @POST
      */
-    public function commentProduct($id, CreateCommentBindingModel $model) {
+    public function commentProduct($id, CreateCommentBindingModel $model)
+    {
         $this->eshopData->getProductsRepository()->addComment(Session::get('userId'), $id, $model);
 
         header('Location: ' . RouteService::$basePath . '/products/' . $id);
@@ -58,10 +59,11 @@ class ProductsController extends BaseController
      * @Authorize
      * @Route("{id:num}/add")
      */
-    public function addToCart($id) {
+    public function addToCart($id)
+    {
         $result = $this->eshopData->getProductsRepository()->addToCart(Session::get('userId'), $id);
 
-        RouteService::redirect('categories', '');
+        RouteService::redirect('categories', '',[], true);
     }
 
     /**
@@ -69,7 +71,8 @@ class ProductsController extends BaseController
      * @Roles(Administrator, Editor)
      * @Route("{id:num}/quantity")
      */
-    public function changeQuantity($id, ChangeProductQuantityBindingModel $model) {
+    public function changeQuantity($id, ChangeProductQuantityBindingModel $model)
+    {
         $result = $this->eshopData->getProductsRepository()->changeQuantity($id, $model->getQuantity());
 
         RouteService::redirect('products', '', [$id], true);
@@ -79,7 +82,8 @@ class ProductsController extends BaseController
      * @param $id
      * @Route("{id:num}")
      */
-    public function viewProduct($id) {
+    public function viewProduct($id)
+    {
         $product = $this->eshopData->getProductsRepository()->findById($id);
         $comments = $this->eshopData->getProductsRepository()->getComments($id);
 
@@ -96,7 +100,8 @@ class ProductsController extends BaseController
      * @Roles(Administrator, Editor)
      * @Route("{id:num}")
      */
-    public function deleteProduct($id) {
+    public function deleteProduct($id)
+    {
 
     }
 
@@ -105,7 +110,8 @@ class ProductsController extends BaseController
      * @Roles(Administrator, Editor)
      * @Route("{id:num}")
      */
-    public function changeCategory($id, ChangeProductCategoryBindingModel $model) {
+    public function changeCategory($id, ChangeProductCategoryBindingModel $model)
+    {
         $result = $this->eshopData->getProductsRepository()->changeCategory($id, $model->getCategoryId());
 
         RouteService::redirect('products', '', [$id], true);

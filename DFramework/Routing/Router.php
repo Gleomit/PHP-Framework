@@ -1,9 +1,6 @@
 <?php
-
 namespace DF\Routing;
 
-
-use DF\Core\Request;
 use DF\Helpers\RouteScanner;
 use DF\Services\RouteService;
 
@@ -16,11 +13,13 @@ class Router extends AbstractRouter
 
     public $routeInfo = [];
 
-    public function __construct() {
+    public function __construct()
+    {
 
     }
 
-    public function parseUrl() {
+    public function parseUrl()
+    {
         $routes = $this->loadAllRoutes();
 
         $valid = false;
@@ -57,15 +56,18 @@ class Router extends AbstractRouter
         }
     }
 
-    public function getController() {
+    public function getController()
+    {
         return $this->controller;
     }
 
-    public function getAction() {
+    public function getAction()
+    {
         return $this->action;
     }
 
-    private function loadAllRoutes() {
+    private function loadAllRoutes()
+    {
         $scanner = new RouteScanner();
 
         $areasRoutes = $scanner->getAreasControllersRoutes("Areas", true);

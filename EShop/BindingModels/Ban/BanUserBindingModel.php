@@ -8,7 +8,8 @@ class BanUserBindingModel implements IBindingModel
 {
     private $username;
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 }

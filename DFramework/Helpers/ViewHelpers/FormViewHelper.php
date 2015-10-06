@@ -1,5 +1,4 @@
 <?php
-
 namespace DF\Helpers\ViewHelpers;
 
 use DF\Helpers\Csrf;
@@ -19,7 +18,8 @@ class FormViewHelper
     private static $attributes = [];
     private static $classes = [];
 
-    public static function init($ajaxForm = false) {
+    public static function init($ajaxForm = false)
+    {
         self::$elements = [];
         self::$attributes = [];
 
@@ -30,7 +30,8 @@ class FormViewHelper
         return new self();
     }
 
-    public static function render() {
+    public static function render()
+    {
         self::$attributes['class'] = implode(' ', self::$classes);
 
         $attributesString = "";
@@ -67,17 +68,20 @@ class FormViewHelper
         return $result;
     }
 
-    public static function setAction($action) {
+    public static function setAction($action)
+    {
         self::setAttribute("action", $action);
         return new self();
     }
 
-    public static function setMethod($method) {
+    public static function setMethod($method)
+    {
         self::setAttribute("method", $method);
         return new self();
     }
 
-    public static function setAttribute($attribute, $value) {
+    public static function setAttribute($attribute, $value)
+    {
         if(strtolower($attribute) == "class") {
             if(is_array($value)) {
                 self::$classes = array_merge(self::$classes, $value);
@@ -91,7 +95,8 @@ class FormViewHelper
         return new self();
     }
 
-    public static function setAttributes(array $attributes, array $values) {
+    public static function setAttributes(array $attributes, array $values)
+    {
         if(count($attributes) != count($values)) {
             throw new \Exception("Difference between attributes and values elements length");
         }
@@ -111,27 +116,33 @@ class FormViewHelper
         return new self();
     }
 
-    public static function initTextField() {
+    public static function initTextField()
+    {
         return new TextField();
     }
 
-    public static function initTextArea() {
+    public static function initTextArea()
+    {
         return new TextArea();
     }
 
-    public static function initPasswordField() {
+    public static function initPasswordField()
+    {
         return new PasswordField();
     }
 
-    public static function initRadioButton() {
+    public static function initRadioButton()
+    {
         return new RadioButton();
     }
 
-    public static function initCheckbox() {
+    public static function initCheckbox()
+    {
         return new Checkbox();
     }
 
-    public static function initSubmitButton() {
+    public static function initSubmitButton()
+    {
         return new SubmitButton();
     }
 }

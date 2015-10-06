@@ -11,7 +11,8 @@ class CreateProductBindingModel implements IBindingModel
     private $categoryId;
     private $quantity;
 
-    public function __construct($bindingModel) {
+    public function __construct($bindingModel)
+    {
         if(isset($bindingModel)) {
             $this->setProductName($bindingModel['productName']);
             $this->setProductPrice($bindingModel['productPrice']);

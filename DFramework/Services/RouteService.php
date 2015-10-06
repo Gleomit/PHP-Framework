@@ -1,16 +1,17 @@
 <?php
-
 namespace DF\Services;
 
 class RouteService
 {
     public static $basePath;
 
-    public static function init($basePath) {
+    public static function init($basePath)
+    {
         self::$basePath = $basePath;
     }
 
-    public static function redirect($controller, $action, $requestParams = [], $exit = false) {
+    public static function redirect($controller, $action, $requestParams = [], $exit = false)
+    {
         $location = self::$basePath
             . "$controller/"
             . $action
@@ -23,7 +24,8 @@ class RouteService
         }
     }
 
-    public static function getUrl($controller, $action, $requestParams = []) {
+    public static function getUrl($controller, $action, $requestParams = [])
+    {
         $location = self::$basePath
             . "$controller/"
             . "$action/";

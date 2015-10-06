@@ -1,5 +1,4 @@
 <?php
-
 namespace DF;
 
 use DF\Helpers\Csrf;
@@ -9,7 +8,8 @@ use DF\Routing\Router;
 use DF\Services\RoleService;
 use DF\Services\RouteService;
 
-class App {
+class App
+{
 
     private static $instance = null;
     public static $WEB_SERVICE = false;
@@ -19,7 +19,8 @@ class App {
      */
     private $frontController;
 
-    public function run () {
+    public function run()
+    {
         error_reporting(E_ALL);
 
         Session::start();
@@ -40,7 +41,8 @@ class App {
         $this->frontController->dispatch();
     }
 
-    private function registerDatabaseConfiguration() {
+    private function registerDatabaseConfiguration()
+    {
         \DF\Core\Database::setInstance(
             \DF\Config\DatabaseConfig::DB_INSTANCE,
             \DF\Config\DatabaseConfig::DB_DRIVER,
@@ -51,25 +53,29 @@ class App {
         );
     }
 
-    public function getFrontController() {
+    public function getFrontController()
+    {
         return $this->frontController;
     }
 
-    private function initRouteService() {
+    private function initRouteService()
+    {
         $phpSelf = $_SERVER['PHP_SELF'];
         $index = basename($phpSelf);
 
         RouteService::init(str_replace($index, '', $phpSelf));
     }
 
-    private function loadRoles() {
+    private function loadRoles()
+    {
         self::$roles = RoleService::getRoles();
     }
 
     /**
      * @return \DF\App|null
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$instance == null) {
             self::$instance = new \DF\App();
         }

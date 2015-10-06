@@ -1,7 +1,5 @@
 <?php
-
 namespace DF\Core;
-
 
 class Request
 {
@@ -18,12 +16,14 @@ class Request
     const TYPE_DELETE = 'DELETE';
     const TYPE_STANDARD = 'GET|POST';
 
-    public function __construct($params, $type = self::TYPE_GET) {
+    public function __construct($params, $type = self::TYPE_GET)
+    {
         $this->params = $params;
         $this->type = $type;
     }
 
-    public static function handle() {
+    public static function handle()
+    {
         $type = $_SERVER['REQUEST_METHOD'];
         $params = [];
 
@@ -38,20 +38,24 @@ class Request
         return new Request($params, $type);
     }
 
-    public function getType() {
+    public function getType()
+    {
 
         return $this->type;
     }
 
-    public static function needToChangeCsrf() {
+    public static function needToChangeCsrf()
+    {
         return self::$needToChangeCsrf;
     }
 
-    public function getParams() {
+    public function getParams()
+    {
         return $this->params;
     }
 
-    public function getParam($param) {
+    public function getParam($param)
+    {
         return $this->params[$param];
     }
 }

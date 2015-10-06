@@ -1,7 +1,5 @@
 <?php
-
 namespace DF\Config;
-
 
 class AppConfig
 {

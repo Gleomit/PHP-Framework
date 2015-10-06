@@ -2,7 +2,6 @@
 
 namespace DF\Controllers;
 
-
 use DF\BindingModels\Category\CreateCategoryBindingModel;
 use DF\BindingModels\Category\DeleteCategoryBindingModel;
 use DF\Core\View;
@@ -18,7 +17,8 @@ class CategoriesController extends BaseController
      */
     private $eshopData;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->eshopData = new EShopData();
     }
 
@@ -26,7 +26,8 @@ class CategoriesController extends BaseController
      * @return View
      * @Route("")
      */
-    public function categories() {
+    public function categories()
+    {
         $categories = $this->eshopData->getCategoriesRepository()->getCategories();
         $products = $this->eshopData->getProductsRepository()->getAllProducts();
 
@@ -42,7 +43,8 @@ class CategoriesController extends BaseController
      * @return View
      * @Route("{id:num}")
      */
-    public function viewCategory($id) {
+    public function viewCategory($id)
+    {
         $categories = $this->eshopData->getCategoriesRepository()->getCategories();
         $products = $this->eshopData->getCategoriesRepository()->getProducts($id);
 
@@ -60,7 +62,8 @@ class CategoriesController extends BaseController
      * @Route("")
      * @POST
      */
-    public function add(CreateCategoryBindingModel $model) {
+    public function add(CreateCategoryBindingModel $model)
+    {
         $isCreated = $this->eshopData->getCategoriesRepository()->create($model);
 
         if($isCreated) {
@@ -74,7 +77,8 @@ class CategoriesController extends BaseController
      * @Roles(Administrator, Editor)
      * @Route("{id:num}/delete")
      */
-    public function delete($id) {
+    public function delete($id)
+    {
         $isDeleted = $this->eshopData->getCategoriesRepository()->remove($id);
 
         if($isDeleted) {
@@ -87,7 +91,8 @@ class CategoriesController extends BaseController
     /**
      * @Route("{categoryId:num}/products")
      */
-    public function getProducts($categoryId) {
+    public function getProducts($categoryId)
+    {
         $products = $this->eshopData->getCategoriesRepository()->findById($categoryId);
 
         $viewModel = new CategoryViewModel();

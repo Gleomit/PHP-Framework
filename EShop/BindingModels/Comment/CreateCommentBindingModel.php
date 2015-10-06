@@ -8,7 +8,8 @@ class CreateCommentBindingModel implements IBindingModel
 {
     private $commentText;
 
-    public function __construct($bindingModel) {
+    public function __construct($bindingModel)
+    {
         if(isset($bindingModel)) {
 
         }

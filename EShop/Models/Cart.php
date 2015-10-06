@@ -2,7 +2,6 @@
 
 namespace DF\Models;
 
-
 class Cart
 {
     private $_id;
@@ -12,7 +11,8 @@ class Cart
     private $_productName;
     private $_productPrice;
 
-    public function __construct($data) {
+    public function __construct($data)
+    {
         $this->setId($data['id']);
         $this->setCartOwner($data['username']);
         $this->setProductId($data['productId']);
@@ -21,51 +21,63 @@ class Cart
         $this->setCartProductId($data['cartProductId']);
     }
 
-    public function getCartProductId() {
+    public function getCartProductId()
+    {
         return $this->_cartProductId;
     }
 
-    public function setCartProductId($cartProductId) {
+    public function setCartProductId($cartProductId)
+    {
         $this->_cartProductId = $cartProductId;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->_id;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->_id = $id;
     }
 
-    public function getCartOwner() {
+    public function getCartOwner()
+    {
         return $this->_cartOwner;
     }
 
-    public function setCartOwner($cartOwner) {
+    public function setCartOwner($cartOwner)
+    {
         $this->_cartOwner = $cartOwner;
     }
 
-    public function getProductId() {
+    public function getProductId()
+    {
         return $this->_productId;
     }
 
-    public function setProductId($productId) {
+    public function setProductId($productId)
+    {
         $this->_productId = $productId;
     }
 
-    public function getProductName() {
+    public function getProductName()
+    {
         return $this->_productName;
     }
 
-    public function setProductName($productName) {
+    public function setProductName($productName)
+    {
         $this->_productName = $productName;
     }
 
-    public function getProductPrice() {
+    public function getProductPrice()
+    {
         return $this->_productPrice;
     }
 
-    public function setProductPrice($productPrice) {
+    public function setProductPrice($productPrice)
+    {
         $this->_productPrice = $productPrice;
     }
 }

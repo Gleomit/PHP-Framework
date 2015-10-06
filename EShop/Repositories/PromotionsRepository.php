@@ -2,7 +2,6 @@
 
 namespace DF\Repositories;
 
-
 use DF\Config\AppConfig;
 use DF\Config\DatabaseConfig;
 use DF\Core\Database;
@@ -11,7 +10,8 @@ class PromotionsRepository implements IRepository
 {
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
     }
 
@@ -28,7 +28,8 @@ class PromotionsRepository implements IRepository
         return $data;
     }
 
-    public function getBiggestGlobalPromotion() {
+    public function getBiggestGlobalPromotion()
+    {
         $statement = $this->db->prepare("
             SELECT id, start_date, end_date, promotion_type, MAX(discount) AS discount FROM promotions
             WHERE promotion_type = ? AND end_date > NOW() AND NOW() > start_date
@@ -45,7 +46,8 @@ class PromotionsRepository implements IRepository
         return $result;
     }
 
-    public function getCategoryPromotion($categoryId) {
+    public function getCategoryPromotion($categoryId)
+    {
         $statement = $this->db->prepare("
             SELECT p.id, p.start_date, p.end_date, p.promotion_type, MAX(p.discount) AS discount FROM promotions AS p
             INNER JOIN category_promotions AS cp ON cp.promotion_id = p.id
@@ -66,7 +68,8 @@ class PromotionsRepository implements IRepository
         return $result;
     }
 
-    public function getProductPromotion($productId) {
+    public function getProductPromotion($productId)
+    {
         $statement = $this->db->prepare("
             SELECT p.id, p.start_date, p.end_date, p.promotion_type, MAX(p.discount) AS discount FROM promotions AS p
             INNER JOIN products_promotions AS pp ON pp.promotion_id = p.id
@@ -87,7 +90,8 @@ class PromotionsRepository implements IRepository
         return $result;
     }
 
-    public function getUserPromotion($userId) {
+    public function getUserPromotion($userId)
+    {
         $statement = $this->db->prepare("
             SELECT cash FROM users WHERE id = ?
         ");
@@ -116,7 +120,8 @@ class PromotionsRepository implements IRepository
         return $result;
     }
 
-    public function getTheBiggestPromotion($userId = null, $productId = null, $categoryId = null) {
+    public function getTheBiggestPromotion($userId = null, $productId = null, $categoryId = null)
+    {
         $discount = 0;
 
         $globalPromotion = $this->getBiggestGlobalPromotion();

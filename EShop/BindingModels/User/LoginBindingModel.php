@@ -9,26 +9,31 @@ class LoginBindingModel implements IBindingModel
     private $username;
     private $password;
 
-    public function __construct($bindingData) {
+    public function __construct($bindingData)
+    {
         if(isset($bindingData)) {
             $this->setUsername($bindingData['username']);
             $this->setPassword($bindingData['password']);
         }
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function setUsername($value) {
+    public function setUsername($value)
+    {
         $this->username = $value;
     }
 
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->password;
     }
 
-    public function setPassword($value) {
+    public function setPassword($value)
+    {
         $this->password = $value;
     }
 }

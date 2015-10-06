@@ -2,23 +2,26 @@
 
 namespace DF\BindingModels\Category;
 
-
 use DF\BindingModels\IBindingModel;
 
 class UpdateCategoryBindingModel implements IBindingModel
 {
     private $name;
 
-    public function __construct($data) {
-        if(isset($data))
+    public function __construct($data)
+    {
+        if(isset($data)) {
             $this->setName($data['name']);
+        }
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->name = $name;
     }
 }

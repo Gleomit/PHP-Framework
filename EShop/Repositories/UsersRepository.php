@@ -2,7 +2,6 @@
 
 namespace DF\Repositories;
 
-
 use DF\App;
 use DF\BindingModels\User\RegisterBindingModel;
 use DF\Config\AppConfig;
@@ -17,11 +16,13 @@ class UsersRepository implements IRepository
     private $db;
     const TABLE_NAME = "users";
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = \DF\Core\Database::getInstance(DatabaseConfig::DB_INSTANCE);
     }
 
-    public function create(RegisterBindingModel $model) {
+    public function create(RegisterBindingModel $model)
+    {
         if($model->getPassword() != $model->getConfirmPassword()) {
             throw new \Exception('Passwords does not match');
         }
@@ -80,11 +81,13 @@ class UsersRepository implements IRepository
         return true;
     }
 
-    public function remove($id) {
+    public function remove($id)
+    {
 
     }
 
-    public function findById($id) {
+    public function findById($id)
+    {
         $statement = $this->db->prepare("
             SELECT * FROM users WHERE id = ?
         ");
@@ -104,7 +107,8 @@ class UsersRepository implements IRepository
         return $user;
     }
 
-    public function findByUsername($username) {
+    public function findByUsername($username)
+    {
         $statement = $this->db->prepare("
             SELECT * FROM users WHERE username = ?
         ");
@@ -124,7 +128,8 @@ class UsersRepository implements IRepository
         return $user;
     }
 
-    public function userExistsByUsername($username) {
+    public function userExistsByUsername($username)
+    {
         $statement = $this->db->prepare("
             SELECT id FROM users WHERE username = ?
         ");
@@ -138,7 +143,8 @@ class UsersRepository implements IRepository
         return false;
     }
 
-    public function banIP($ipAddress) {
+    public function banIP($ipAddress)
+    {
         $statement = $this->db->prepare("
             INSERT INTO blacklist (ip_address)
             VALUES (?)
@@ -153,7 +159,8 @@ class UsersRepository implements IRepository
         return false;
     }
 
-    public function banByUsername($username) {
+    public function banByUsername($username)
+    {
         $statement = $this->db->prepare("
             UPDATE users
             SET is_banned = TRUE
@@ -170,7 +177,8 @@ class UsersRepository implements IRepository
         return false;
     }
 
-    public function getUserCart($userId) {
+    public function getUserCart($userId)
+    {
         $statement = $this->db->prepare("
             SELECT p.name, p.price FROM usercart AS uc
             INNER JOIN cart_products AS cp ON cp.card_id = uc.id
@@ -184,7 +192,8 @@ class UsersRepository implements IRepository
         return new Cart($data);
     }
 
-    public function getUserProducts($userId) {
+    public function getUserProducts($userId)
+    {
         $statement = $this->db->prepare("
             SELECT * FROM user_products
             WHERE user_id = ?
@@ -197,7 +206,8 @@ class UsersRepository implements IRepository
         return $data;
     }
 
-    public function getUserCartId($userId) {
+    public function getUserCartId($userId)
+    {
         $statement = $this->db->prepare("
             SELECT id FROM usercart WHERE user_id = ?
         ");

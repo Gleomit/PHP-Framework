@@ -2,7 +2,6 @@
 
 namespace DF\Repositories;
 
-
 use DF\BindingModels\Category\CreateCategoryBindingModel;
 use DF\BindingModels\Category\UpdateCategoryBindingModel;
 use DF\Config\DatabaseConfig;
@@ -14,11 +13,13 @@ class CategoriesRepository implements IRepository
     private $db;
     const TABLE_NAME = "categories";
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = \DF\Core\Database::getInstance(DatabaseConfig::DB_INSTANCE);
     }
 
-    public function create(CreateCategoryBindingModel $model) {
+    public function create(CreateCategoryBindingModel $model)
+    {
         if($this->categoryExists($model->getName())) {
             return false;
         }
@@ -40,7 +41,8 @@ class CategoriesRepository implements IRepository
         return true;
     }
 
-    public function update($categoryId, UpdateCategoryBindingModel $model) {
+    public function update($categoryId, UpdateCategoryBindingModel $model)
+    {
         $statement = $this->db->prepare("
             UPDATE categories
             SET name = ?
@@ -59,7 +61,8 @@ class CategoriesRepository implements IRepository
         return true;
     }
 
-    public function remove($categoryId) {
+    public function remove($categoryId)
+    {
         $statement = $this->db->prepare("
             DELETE FROM categories
             WHERE id = ?
@@ -73,7 +76,8 @@ class CategoriesRepository implements IRepository
         return true;
     }
 
-    public function getCategories() {
+    public function getCategories()
+    {
         $statement = $this->db->prepare("
             SELECT * FROM categories
         ");
@@ -86,7 +90,8 @@ class CategoriesRepository implements IRepository
         return $categories;
     }
 
-    public function findById($id) {
+    public function findById($id)
+    {
         $statement = $this->db->prepare("
             SELECT * FROM categories WHERE id = ?
         ");
@@ -103,7 +108,8 @@ class CategoriesRepository implements IRepository
         return $category;
     }
 
-    public function getProducts($categoryId) {
+    public function getProducts($categoryId)
+    {
         $statement = $this->db->prepare("
             SELECT * FROM products WHERE category_id = ?
         ");
@@ -125,7 +131,8 @@ class CategoriesRepository implements IRepository
         return $products;
     }
 
-    public function categoryExists($name) {
+    public function categoryExists($name)
+    {
         $statement = $this->db->prepare("
             SELECT id FROM categories WHERE name = ?
         ");

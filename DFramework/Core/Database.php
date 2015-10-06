@@ -1,5 +1,4 @@
 <?php
-
 namespace DF\Core;
 
 use DF\Core\Drivers\DriverFactory;
@@ -13,7 +12,8 @@ class Database
      */
     private $db;
 
-    private function __construct ($pdoInstance) {
+    private function __construct ($pdoInstance)
+    {
         $this->db = $pdoInstance;
         $this->db->setAttribute( \PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION );
     }
@@ -23,7 +23,8 @@ class Database
      * @return Database
      * @throws \Exception
      */
-    public static function getInstance ($instanceName = 'default') {
+    public static function getInstance ($instanceName = 'default')
+    {
         if(!isset(self::$_instances[$instanceName])) {
             throw new \Exception("Instance with this name does not exists.");
         }
@@ -31,7 +32,8 @@ class Database
         return static::$_instances[$instanceName];
     }
 
-    public static function setInstance ($instanceName, $driver, $user, $pass, $dbName, $host = null) {
+    public static function setInstance ($instanceName, $driver, $user, $pass, $dbName, $host = null)
+    {
         $driver = DriverFactory::create($driver, $user, $pass, $dbName, $host);
 
         $pdo = new \PDO($driver->getDsn(), $user, $pass);
@@ -39,33 +41,41 @@ class Database
         self::$_instances[$instanceName] = new self($pdo);
     }
 
-    public function prepare($statement, array $driverOptions = []) {
+    public function prepare($statement, array $driverOptions = [])
+
+    {
         $statement = $this->db->prepare($statement, $driverOptions);
 
         return new Statement($statement);
     }
 
-    public function query($query) {
+    public function query($query)
+    {
         return $this->db->query($query);
     }
 
-    public function lastId($name = null) {
+    public function lastId($name = null)
+    {
         return $this->db->lastInsertId($name);
     }
 
-    public function beginTransaction() {
+    public function beginTransaction()
+    {
         return $this->db->beginTransaction();
     }
 
-    public function commit() {
+    public function commit()
+    {
         return $this->db->commit();
     }
 
-    public function rollBack() {
+    public function rollBack()
+    {
         return $this->db->rollBack();
     }
 
-    public function getEntityByColumnName($fromTable, $columnName, $columnValue) {
+    public function getEntityByColumnName($fromTable, $columnName, $columnValue)
+    {
         $statement = $this->prepare("
             SELECT * FROM $fromTable
             WHERE $columnName = ?;
@@ -79,7 +89,8 @@ class Database
         return $statement->fetch();
     }
 
-    public function getEntityById($fromTable, $id) {
+    public function getEntityById($fromTable, $id)
+    {
         $statement = $this->prepare("
             SELECT * FROM $fromTable WHERE id = ?
         ");
@@ -92,7 +103,8 @@ class Database
         return $statement->fetch();
     }
 
-    public function getAllEntitiesByColumnName($fromTable, $columnName, $columnValue, $limit = null, $offset = null) {
+    public function getAllEntitiesByColumnName($fromTable, $columnName, $columnValue, $limit = null, $offset = null)
+    {
         $data = [$columnName];
         $statement = $this->prepare(" SELECT * FROM $fromTable WHERE $columnName = ?");
 
@@ -104,7 +116,8 @@ class Database
             $data[] = $offset;
         }
 
-        if(!$statement->execute($data)) {
+        if(!$statement->execute($data))
+        {
             echo $statement->errorInfo();
             return false;
         }
@@ -112,7 +125,8 @@ class Database
         return $statement->fetchAll();
     }
 
-    public function getAllEntities($fromTable, $limit = null, $offset = null) {
+    public function getAllEntities($fromTable, $limit = null, $offset = null)
+    {
         $statement = $this->prepare(" SELECT * FROM $fromTable ");
         $data = [];
 
@@ -132,7 +146,8 @@ class Database
         return $statement->fetchAll();
     }
 
-    public function insertEntity($inTable, $entityData) {
+    public function insertEntity($inTable, $entityData)
+    {
         $valuesCount = $this->getValuesCount($entityData);
         $columnNames = implode(', ', array_keys($entityData));
         $statement = $this->prepare("
@@ -176,7 +191,8 @@ class Database
         return true;
     }
 
-    public function deleteEntityById($tableName, $id) {
+    public function deleteEntityById($tableName, $id)
+    {
         $statement = $this->prepare("
             DELETE FROM $tableName WHERE id = ?
         ");
@@ -193,7 +209,8 @@ class Database
         return true;
     }
 
-    private function getValuesCount($assoc) {
+    private function getValuesCount($assoc)
+    {
         $keys = array_values($assoc);
         $columns = '';
 

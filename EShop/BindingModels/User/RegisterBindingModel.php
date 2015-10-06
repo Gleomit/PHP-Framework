@@ -12,7 +12,8 @@ class RegisterBindingModel implements IBindingModel
     private $email;
     protected $cash = null;
 
-    public function __construct($bindingData) {
+    public function __construct($bindingData)
+    {
         if(isset($bindingData)) {
             $this->setUsername($bindingData['username']);
             $this->setPassword($bindingData['password']);
@@ -21,43 +22,53 @@ class RegisterBindingModel implements IBindingModel
         }
     }
 
-    public function getConfirmPassword() {
+    public function getConfirmPassword()
+    {
         return $this->confirmPassword;
     }
 
-    public function setConfirmPassword($confirmPassword) {
+    public function setConfirmPassword($confirmPassword)
+    {
         $this->confirmPassword = $confirmPassword;
     }
 
-    public function getUsername() {
+    public function getUsername()
+    {
         return $this->username;
     }
 
-    public function setUsername($value) {
+    public function setUsername($value)
+    {
         $this->username = $value;
     }
 
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->password;
     }
 
-    public function setPassword($value) {
+    public function setPassword($value)
+    {
         $this->password = $value;
     }
 
-    public function getEmail() {
+    public function getEmail()
+    {
         return $this->email;
     }
 
-    public function setEmail($value) {
+    public function setEmail($value)
+    {
         $this->email = $value;
     }
 
-    public function getCash() {
+    public function getCash()
+    {
         return $this->cash;
     }
 
-    public function setCash($value) {
+    public function setCash($value)
+    {
         $this->cash = $value;
     }
 }

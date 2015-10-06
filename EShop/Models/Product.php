@@ -2,7 +2,6 @@
 
 namespace DF\Models;
 
-
 class Product extends BaseModel
 {
     private $_id;
@@ -12,60 +11,72 @@ class Product extends BaseModel
     private $_price;
     private $_categoryName;
 
-    public function __construct($data) {
+    public function __construct($data)
+    {
         $this->setId($data['id']);
         $this->setName($data['name']);
         $this->setCategoryId($data['category_id']);
-//        $this->setCategoryName($data['categoryName']);
         $this->setQuantity($data['quantity']);
         $this->setPrice($data['price']);
     }
 
-    public function getCategoryName() {
+    public function getCategoryName()
+    {
         return $this->_categoryName;
     }
 
-    public function setCategoryName($categoryName) {
+    public function setCategoryName($categoryName)
+    {
         $this->_categoryName = $categoryName;
     }
 
-    public function getId() {
+    public function getId()
+    {
         return $this->_id;
     }
 
-    public function setId($id) {
+    public function setId($id)
+    {
         $this->_id = $id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->_name;
     }
 
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->_name = $name;
     }
 
-    public function getCategoryId() {
+    public function getCategoryId()
+    {
         return $this->_categoryId;
     }
 
-    public function setCategoryId($categoryId) {
+    public function setCategoryId($categoryId)
+    {
         $this->_categoryId = $categoryId;
     }
 
-    public function getQuantity() {
+    public function getQuantity()
+    {
         return $this->_quantity;
     }
 
-    public function setQuantity($quantity) {
+    public function setQuantity($quantity)
+    {
         $this->_quantity = $quantity;
     }
 
-    public function getPrice() {
+    public function getPrice()
+    {
         return $this->_price;
     }
 
-    public function setPrice($price) {
+    public function setPrice($price)
+    {
         $this->_price = $price;
     }
 }

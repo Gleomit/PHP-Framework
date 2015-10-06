@@ -2,7 +2,6 @@
 
 namespace DF\Controllers;
 
-
 use DF\BindingModels\User\LoginBindingModel;
 use DF\BindingModels\User\RegisterBindingModel;
 use DF\Core\View;
@@ -22,14 +21,16 @@ class AccountController extends BaseController
 
     const DEFAULT_USER_CASH = 500.00;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->eshopData = new EShopData();
     }
 
     /**
      * @Authorize
      */
-    public function profile() {
+    public function profile()
+    {
         echo $this->eshopData->getPromotionsRepository()->getTheBiggestPromotion(
             Session::get('userId'), 1, 2
         );
@@ -41,7 +42,8 @@ class AccountController extends BaseController
      * @Authorize
      * @Route("cart/product/{productId:num}/remove")
      */
-    public function removeProductFromCart($productId) {
+    public function removeProductFromCart($productId)
+    {
         $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'))['id'];
         $result = $this->eshopData->getCartsRepository()->removeProduct($productId, $cartId);
 
@@ -52,7 +54,8 @@ class AccountController extends BaseController
      * @Authorize
      * @Route("cart/product/{productId:num}/increase")
      */
-    public function increaseProductQuantityInCart($productId) {
+    public function increaseProductQuantityInCart($productId)
+    {
         $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'))['id'];
         $result = $this->eshopData->getProductsRepository()->increaseQuantityInCart($productId, $cartId);
 
@@ -63,7 +66,8 @@ class AccountController extends BaseController
      * @Authorize
      * @Route("cart/product/{productId:num}/decrease")
      */
-    public function decreaseProductQuantityInCart($productId) {
+    public function decreaseProductQuantityInCart($productId)
+    {
         $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'))['id'];
         $result = $this->eshopData->getProductsRepository()->decreaseQuantityInCart($productId, $cartId);
 
@@ -73,7 +77,8 @@ class AccountController extends BaseController
     /**
      * @Authorize
      */
-    public function cart() {
+    public function cart()
+    {
         $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'))['id'];
         $products = $this->eshopData->getCartsRepository()->getProductsInCart($cartId);
 
@@ -92,7 +97,8 @@ class AccountController extends BaseController
      * @throws \Exception
      * @POST
      */
-    public function register(RegisterBindingModel $model) {
+    public function register(RegisterBindingModel $model)
+    {
         $model->setCash(self::DEFAULT_USER_CASH);
 
         $registerResult = $this->eshopData->getUsersRepository()->create($model);
@@ -114,7 +120,8 @@ class AccountController extends BaseController
      * @Authorize
      * @Route("products")
      */
-    public function myProducts() {
+    public function myProducts()
+    {
         $viewModel = new UserProductsViewModel();
 
         $viewModel->products = $this->eshopData->getUsersRepository()->getUserProducts(Session::get('userId'));
@@ -126,7 +133,8 @@ class AccountController extends BaseController
      * @Authorize
      * @Route("cart/checkout")
      */
-    public function checkoutCart() {
+    public function checkoutCart()
+    {
         $cartId = $this->eshopData->getUsersRepository()->getUserCartId(Session::get('userId'));
         $this->eshopData->getCartsRepository()->checkoutCart(Session::get('userId'), $cartId['id']);
         RouteService::redirect('home', '', true);
@@ -137,13 +145,14 @@ class AccountController extends BaseController
      * @throws \Exception
      * @POST
      */
-    public function login(LoginBindingModel $model) {
+    public function login(LoginBindingModel $model)
+    {
         $username = $model->getUsername();
         $password = $model->getPassword();
 
         $user = $this->eshopData->getUsersRepository()->findByUsername($username);
 
-        if($user === false || !password_verify($password, $user->getPassword())){
+        if($user === false || !password_verify($password, $user->getPassword())) {
             throw new \Exception('Invalid credentials');
         }
 
@@ -160,7 +169,8 @@ class AccountController extends BaseController
     /**
      * @Authorize
      */
-    public function logout() {
+    public function logout()
+    {
         if($this->isLogged()) {
             Session::emptyUserRelated();
             RouteService::redirect('home', '', true);

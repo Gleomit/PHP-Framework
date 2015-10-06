@@ -1,15 +1,15 @@
 <?php
-
 namespace DF\Helpers;
 
-
-class Session {
+class Session
+{
 
     /**
      * Start a session, if one is not already started
      */
-    public static function start(){
-        if(session_id() == ''){
+    public static function start()
+    {
+        if(session_id() == '') {
             session_start();
         }
     }
@@ -20,7 +20,8 @@ class Session {
      * @param string $value
      * @return boolean
      */
-    public static function put($name, $value){
+    public static function put($name, $value)
+    {
         return $_SESSION[$name] = $value;
     }
 
@@ -29,7 +30,8 @@ class Session {
      * @param string $name
      * @return string
      */
-    public static function get($name){
+    public static function get($name)
+    {
         return (self::exists($name)) ? $_SESSION[$name] : null;
     }
 
@@ -38,11 +40,13 @@ class Session {
      * @param string $name
      * @return boolean
      */
-    public static function exists($name){
+    public static function exists($name)
+    {
         return (isset($_SESSION[$name])) ? true : false;
     }
 
-    public static function emptyUserRelated() {
+    public static function emptyUserRelated()
+    {
         unset($_SESSION['userId']);
         unset($_SESSION['role']);
     }

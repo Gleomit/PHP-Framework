@@ -41,7 +41,8 @@ class EShopData
      */
     private $_commentsRepository;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->_productsRepository = new ProductsRepository();
         $this->_categoriesRepository = new CategoriesRepository();
         $this->_usersRepository = new UsersRepository();

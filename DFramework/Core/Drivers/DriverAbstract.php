@@ -1,5 +1,4 @@
 <?php
-
 namespace DF\Core\Drivers;
 
 abstract class DriverAbstract
@@ -9,7 +8,8 @@ abstract class DriverAbstract
     protected $dbName;
     protected $host;
 
-    protected function __construct($user, $pass, $dbName, $host = null) {
+    protected function __construct($user, $pass, $dbName, $host = null)
+    {
 
     }
 

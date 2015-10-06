@@ -2,7 +2,6 @@
 
 namespace DF\Repositories;
 
-
 use DF\Config\DatabaseConfig;
 use DF\Core\Database;
 
@@ -10,7 +9,8 @@ class CommentsRepository implements IRepository
 {
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
     }
 

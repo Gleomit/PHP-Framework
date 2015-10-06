@@ -8,7 +8,8 @@ class BanIpBindingModel implements IBindingModel
 {
     private $ipAddress;
 
-    public function getIpAddress() {
+    public function getIpAddress()
+    {
         return $this->ipAddress;
     }
 }

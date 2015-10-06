@@ -1,8 +1,8 @@
 <?php
-
 namespace DF\Config;
 
-abstract class DatabaseConfig {
+abstract class DatabaseConfig
+{
     const DB_HOST = 'localhost';
     const DB_USER = 'root';
     const DB_PASSWORD = '';

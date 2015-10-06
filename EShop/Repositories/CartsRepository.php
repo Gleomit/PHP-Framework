@@ -2,7 +2,6 @@
 
 namespace DF\Repositories;
 
-
 use DF\Config\DatabaseConfig;
 use DF\Helpers\Session;
 use DF\Models\Cart;
@@ -14,14 +13,17 @@ class CartsRepository implements IRepository
      */
     private $db;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = \DF\Core\Database::getInstance(DatabaseConfig::DB_INSTANCE);
     }
 
-    public function remove($id) {
+    public function remove($id)
+    {
     }
 
-    public function findById($id) {
+    public function findById($id)
+    {
         $statement = $this->db->prepare("
             SELECT
                 cp.id as cartProductId,
@@ -49,7 +51,8 @@ class CartsRepository implements IRepository
         return $cartsData;
     }
 
-    public function getProductsInCart($cartId) {
+    public function getProductsInCart($cartId)
+    {
         $statement = $this->db->prepare("
             SELECT
 	            p.id, p.name, p.price, p.category_id, cp.quantity, p.quantity AS product_max_quantity, p.details
@@ -79,7 +82,8 @@ class CartsRepository implements IRepository
         return $products;
     }
 
-    public function removeProduct($productId, $cartId) {
+    public function removeProduct($productId, $cartId)
+    {
         $statement = $this->db->prepare("
             DELETE FROM cart_products
             WHERE cart_id = ? AND product_id = ?
@@ -94,7 +98,8 @@ class CartsRepository implements IRepository
         return false;
     }
 
-    public function checkoutCart($userId, $cartId) {
+    public function checkoutCart($userId, $cartId)
+    {
         $products = $this->getProductsInCart($cartId);
 
         $promoRepo = new PromotionsRepository();

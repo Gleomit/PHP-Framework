@@ -2,7 +2,6 @@
 
 namespace DF\Models;
 
-
 class UserProduct
 {
 

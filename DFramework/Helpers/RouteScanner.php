@@ -1,14 +1,13 @@
 <?php
-
 namespace DF\Helpers;
-
 
 use DF\App;
 use DF\Config\AppConfig;
 
 class RouteScanner
 {
-    public function getAllControllersRoutes($getOnlyRoutes = false) {
+    public function getAllControllersRoutes($getOnlyRoutes = false)
+    {
         $controllersRoutes = [];
 
         $declaredControllerFiles = scandir('Controllers');
@@ -43,7 +42,8 @@ class RouteScanner
         return $controllersRoutes;
     }
 
-    public function getAreasControllersRoutes($areasFolder, $getOnlyRoutes = false) {
+    public function getAreasControllersRoutes($areasFolder, $getOnlyRoutes = false)
+    {
         $areasRoutes = [];
 
         $areasFolders = scandir($areasFolder);
@@ -99,7 +99,8 @@ class RouteScanner
         return $areasRoutes;
     }
 
-    private function getControllerRoutes($controller, $areaName = null) {
+    private function getControllerRoutes($controller, $areaName = null)
+    {
         $refClass = new \ReflectionClass($controller);
         $methods = $refClass->getMethods();
 
@@ -225,7 +226,8 @@ class RouteScanner
         return $resultMethods;
     }
 
-    private function checkMethodSignature($routeParams, \ReflectionMethod $method) {
+    private function checkMethodSignature($routeParams, \ReflectionMethod $method)
+    {
         $methodParams = $method->getParameters();
 
         $bindingModels = $this->checkForBindingModels($methodParams);
@@ -249,7 +251,8 @@ class RouteScanner
         return $bindingModels;
     }
 
-    private function checkForBindingModels(array $parameters) {
+    private function checkForBindingModels(array $parameters)
+    {
         $bindingModels = [];
 
         foreach($parameters as $param) {

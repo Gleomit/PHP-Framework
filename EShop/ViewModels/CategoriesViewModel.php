@@ -2,7 +2,6 @@
 
 namespace DF\ViewModels;
 
-
 class CategoriesViewModel
 {
     public $products = [];

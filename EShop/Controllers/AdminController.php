@@ -2,7 +2,6 @@
 
 namespace DF\Controllers;
 
-
 use DF\BindingModels\Ban\BanIpBindingModel;
 use DF\BindingModels\Ban\BanUserBindingModel;
 use DF\Core\View;
@@ -16,14 +15,16 @@ class AdminController extends BaseController
      */
     private $eshopData;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->eshopData = new EShopData();
     }
 
     /**
      * @Roles(Administrator)
      */
-    public function ban() {
+    public function ban()
+    {
         return new View('admin/ban', []);
     }
 
@@ -31,7 +32,8 @@ class AdminController extends BaseController
      * @POST
      * @Roles(Administrator)
      */
-    public function banuser(BanUserBindingModel $model) {
+    public function banuser(BanUserBindingModel $model)
+    {
         $userExists = $this->eshopData->getUsersRepository()->userExistsByUsername($model->getUsername());
 
         if(!$userExists) {
@@ -47,7 +49,8 @@ class AdminController extends BaseController
      * @POST
      * @Roles(Administrator)
      */
-    public function banip(BanIpBindingModel $model) {
+    public function banip(BanIpBindingModel $model)
+    {
         $this->eshopData->getUsersRepository()->banIP($model->getIpAddress());
 
         RouteService::redirect('admin', 'ban', [], true);

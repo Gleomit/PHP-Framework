@@ -2,7 +2,6 @@
 
 namespace DF\Repositories;
 
-
 use DF\BindingModels\Comment\CreateCommentBindingModel;
 use DF\BindingModels\Product\CreateProductBindingModel;
 use DF\Config\DatabaseConfig;
@@ -14,11 +13,13 @@ class ProductsRepository implements IRepository
     private $db;
     const TABLE_NAME = "products";
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->db = \DF\Core\Database::getInstance(DatabaseConfig::DB_INSTANCE);
     }
 
-    public function create(CreateProductBindingModel $model) {
+    public function create(CreateProductBindingModel $model)
+    {
         $statement = $this->db->prepare("
             INSERT INTO products (name, category_id, quantity, price)
             VALUES (?, ?, ?, ?)
@@ -43,11 +44,13 @@ class ProductsRepository implements IRepository
         return true;
     }
 
-    public function remove($id) {
+    public function remove($id)
+    {
 
     }
 
-    public function addComment($userId, $productId, CreateCommentBindingModel $commentModel) {
+    public function addComment($userId, $productId, CreateCommentBindingModel $commentModel)
+    {
         $statement = $this->db->prepare("
             INSERT INTO comments (comment_data, comment_date, user_id, product_id)
             VALUES (?, NOW(), ?, ?)
@@ -71,7 +74,8 @@ class ProductsRepository implements IRepository
         return true;
     }
 
-    public function changeCategory($id, $categoryId) {
+    public function changeCategory($id, $categoryId)
+    {
         $statement = $this->db->prepare("
             UPDATE products
             SET category_id = ?
@@ -87,7 +91,8 @@ class ProductsRepository implements IRepository
         return false;
     }
 
-    public function getAllProducts() {
+    public function getAllProducts()
+    {
         $statement = $this->db->prepare("
             SELECT * FROM products
         ");
@@ -109,7 +114,8 @@ class ProductsRepository implements IRepository
         return $products;
     }
 
-    public function changeQuantity($id, $quantity) {
+    public function changeQuantity($id, $quantity)
+    {
         if($quantity < 0) {
             throw new \Exception("Cannot set negative quantity");
         }
@@ -129,7 +135,8 @@ class ProductsRepository implements IRepository
         return false;
     }
 
-    public function increaseQuantityInCart($productId, $cartId) {
+    public function increaseQuantityInCart($productId, $cartId)
+    {
         $statement = $this->db->prepare("
             UPDATE cart_products
             SET quantity = quantity + 1
@@ -146,7 +153,8 @@ class ProductsRepository implements IRepository
         return false;
     }
 
-    public function decreaseQuantityInCart($productId, $cartId) {
+    public function decreaseQuantityInCart($productId, $cartId)
+    {
         $statement = $this->db->prepare("
             UPDATE cart_products
             SET quantity = quantity - 1
@@ -163,7 +171,8 @@ class ProductsRepository implements IRepository
         return false;
     }
 
-    public function addToCart($userId, $productId) {
+    public function addToCart($userId, $productId)
+    {
         $statement = $this->db->prepare("
             SELECT id from usercart WHERE user_id = ?
         ");
@@ -200,7 +209,8 @@ class ProductsRepository implements IRepository
         return true;
     }
 
-    public function getComments($id) {
+    public function getComments($id)
+    {
         $statement = $this->db->prepare("
             SELECT c.id, c.comment_data, c.comment_date, u.username FROM comments AS c
             INNER JOIN users AS u ON u.id = c.user_id
@@ -218,7 +228,8 @@ class ProductsRepository implements IRepository
         return $comments;
     }
 
-    public function findById($id) {
+    public function findById($id)
+    {
         $statement = $this->db->prepare("
             SELECT * FROM products WHERE id = ?
         ");

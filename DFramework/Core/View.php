@@ -1,5 +1,4 @@
 <?php
-
 namespace DF\Core;
 
 class View
@@ -10,7 +9,8 @@ class View
     const DEFAULT_HEAD_PATH = self::VIEW_FOLDER . '\\includes\\head' . self::VIEW_EXTENSION;
     const DEFAULT_BODY_PATH = self::VIEW_FOLDER . '\\includes\\body' . self::VIEW_EXTENSION;
 
-    public function __construct($filePath, $model, $escapeOutput = true){
+    public function __construct($filePath, $model, $escapeOutput = true)
+    {
         $fullFilePath = self::VIEW_FOLDER . '\\' . $filePath . self::VIEW_EXTENSION;
 
         $this->checkExpectedModel($fullFilePath, $model);
@@ -26,7 +26,8 @@ class View
         require self::DEFAULT_BODY_PATH;
     }
 
-    private function checkExpectedModel($file, $model) {
+    private function checkExpectedModel($file, $model)
+    {
         $contents = file_get_contents($file);
         $rows = explode("\n", $contents);
         $modelTypeAnnotation = $rows[0];
@@ -45,7 +46,8 @@ class View
         }
     }
 
-    private function escapeOutput($toEscape) {
+    private function escapeOutput($toEscape)
+    {
         if(is_array($toEscape)) {
             foreach ($toEscape as $key => &$value) {
                 if(is_object($value)) {
@@ -62,7 +64,8 @@ class View
                     $value = htmlspecialchars($value);
                 }
             }
-        } elseif(is_object($toEscape)) {
+        } elseif(is_object($toEscape))
+        {
             $reflection = new \ReflectionClass($toEscape);
             $properties = $reflection->getProperties();
 

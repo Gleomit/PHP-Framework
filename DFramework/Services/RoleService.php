@@ -1,14 +1,13 @@
 <?php
-
 namespace DF\Services;
-
 
 use DF\Config\DatabaseConfig;
 use DF\Core\Database;
 
 class RoleService
 {
-    public static function userInRoles($userId, array $roles) {
+    public static function userInRoles($userId, array $roles)
+    {
         $userRoles = self::getUserRoles($userId);
 
         foreach($roles as $role) {
@@ -20,7 +19,8 @@ class RoleService
         return false;
     }
 
-    public static function getUserRoles($userId) {
+    public static function getUserRoles($userId)
+    {
         $db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
 
         $result = $db->prepare("
@@ -36,7 +36,8 @@ class RoleService
         return $data;
     }
 
-    public static function getRoles() {
+    public static function getRoles()
+    {
         $db = Database::getInstance(DatabaseConfig::DB_INSTANCE);
 
         $result = $db->prepare("
@@ -54,7 +55,8 @@ class RoleService
         return array_flip($roles);
     }
 
-    public static function isAdministrator() {
+    public static function isAdministrator()
+    {
         if(\DF\Helpers\Session::get('userId') != null &&
             strpos(\DF\Helpers\Session::get('roles'), 'Administrator') >= 0) {
             return true;
@@ -63,7 +65,8 @@ class RoleService
         return false;
     }
 
-    public static function isEditor() {
+    public static function isEditor()
+    {
         if(\DF\Helpers\Session::get('userId') != null &&
             strpos(\DF\Helpers\Session::get('roles'), 'Editor') >= 0) {
             return true;
