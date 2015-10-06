@@ -11,6 +11,7 @@ class Router extends AbstractRouter
 {
     private $controller = "";
     private $action = "";
+
     public $routeParams = [];
 
     public $routeInfo = [];
@@ -24,18 +25,14 @@ class Router extends AbstractRouter
 
         $valid = false;
 
+        $requestUrl = $_GET['url'];
+
+        if($requestUrl[strlen($requestUrl) - 1] === '/' && substr_count($requestUrl, '/') > 1) {
+            $requestUrl = substr($requestUrl, 0, strlen($requestUrl) - 1);
+        }
+
         foreach($routes as $routeInfo) {
             $routeString = $routeInfo['methodPattern'];
-
-            $requestUrl = $_GET['url'];
-
-            if($requestUrl[strlen($requestUrl) - 1] === '/' && substr_count($requestUrl, '/') > 1) {
-                $requestUrl = substr($requestUrl, 0, strlen($requestUrl) - 1);
-            }
-
-            if($routeString[strlen($routeString) - 1] === '/' && substr_count($routeString, '/') > 1) {
-                $routeString = substr($routeString, 0, strlen($routeString) - 1);
-            }
 
             preg_match("/\A$routeString\z/", $requestUrl, $test);
 
@@ -55,8 +52,7 @@ class Router extends AbstractRouter
             }
         }
 
-        if($valid == false) {
-//            throw new \Exception("Route not found");
+        if($valid === false) {
             RouteService::redirect('home', '404', [], true);
         }
     }

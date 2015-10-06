@@ -11,6 +11,7 @@ use DF\Helpers\Csrf;
 use DF\Helpers\Session;
 use DF\Routing\Router;
 use DF\Services\RoleService;
+use DF\Services\RouteService;
 
 class FrontController {
     private $controller;
@@ -30,6 +31,10 @@ class FrontController {
     }
 
     public function dispatch() {
+        if(!isset($_GET['url'])) {
+            RouteService::redirect('home', '', [], true);
+        }
+
         try {
             $this->initRequest();
             $this->getRouter()->parseUrl();

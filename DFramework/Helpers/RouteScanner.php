@@ -210,6 +210,10 @@ class RouteScanner
                     $methodArray['areaName'] = $areaName;
                 }
 
+                if($methodKey[strlen($methodKey) - 1] === '/' && substr_count($methodKey, '/') > 1) {
+                    $methodKey = substr($methodKey, 0, strlen($methodKey) - 1);
+                }
+
                 $methodKey = preg_replace("/\//", "\/", $methodKey);
 
                 $methodArray['methodPattern'] = $methodKey;
